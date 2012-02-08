@@ -75,6 +75,7 @@ class block_semester_sortierung extends block_base {
             $this->config = $config;
         //}
 
+
         $this->content = new stdClass();
         $this->content->text = '';
         $this->content->footer = '';
