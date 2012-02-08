@@ -20,10 +20,10 @@
  * @author Simeon Naydenov
  * @copyright 2012 Vienna University of Technology
  */
-$string['pluginname'] = 'Semester overview';
-$string['sortcourse'] = 'Sort courses by semester';
-$string['sortcoursedesc'] = 'Instance-wide on/off';
-$string['wintermonths'] = 'Months of the winter semester';
-$string['monthsdesc'] = 'Not marked months = Months of the summer semester. Months January - June still count for the winter semester from the previous year';
-$string['summersem'] = 'Summer term';
-$string['wintersem'] = 'Winter term';
+$string['pluginname'] = 'Semesterübersicht';
+$string['sortcourse'] = 'Kurse nach Semestern sortieren';
+$string['sortcoursedesc'] = ' Instanzweit an/aus';
+$string['wintermonths'] = 'Monate des Wintersemesters';
+$string['monthsdesc'] = 'Nicht markierte Monate = Monate des Sommersemesters. Die Monate 1-6 zählen noch zum Wintersemster des Vorjahres';
+$string['summersem'] = 'Sommersemester';
+$string['wintersem'] = 'Wintersemester';

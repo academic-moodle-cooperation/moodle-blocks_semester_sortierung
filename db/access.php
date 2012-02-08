@@ -13,17 +13,28 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Semester overview lang file
+ * Semester overview access control page - roles
  *
  * @package blocks_semester_sortierung
  * @author Simeon Naydenov
  * @copyright 2012 Vienna University of Technology
  */
-$string['pluginname'] = 'Semester overview';
-$string['sortcourse'] = 'Sort courses by semester';
-$string['sortcoursedesc'] = 'Instance-wide on/off';
-$string['wintermonths'] = 'Months of the winter semester';
-$string['monthsdesc'] = 'Not marked months = Months of the summer semester. Months January - June still count for the winter semester from the previous year';
-$string['summersem'] = 'Summer term';
-$string['wintersem'] = 'Winter term';
+
+defined('MOODLE_INTERNAL') || die();
+
+$capabilities = array(
+
+    'block/semester_sortierung:addinstance' => array(
+        'riskbitmask' => RISK_SPAM | RISK_XSS,
+
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_BLOCK,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW
+        ),
+
+        'clonepermissionsfrom' => 'moodle/site:manageblocks'
+    ),
+);

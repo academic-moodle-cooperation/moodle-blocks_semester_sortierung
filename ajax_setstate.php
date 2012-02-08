@@ -13,17 +13,33 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Semester overview lang file
+ * This file updates the user_preference for the block boxes' status
  *
  * @package blocks_semester_sortierung
  * @author Simeon Naydenov
  * @copyright 2012 Vienna University of Technology
  */
-$string['pluginname'] = 'Semester overview';
-$string['sortcourse'] = 'Sort courses by semester';
-$string['sortcoursedesc'] = 'Instance-wide on/off';
-$string['wintermonths'] = 'Months of the winter semester';
-$string['monthsdesc'] = 'Not marked months = Months of the summer semester. Months January - June still count for the winter semester from the previous year';
-$string['summersem'] = 'Summer term';
-$string['wintersem'] = 'Winter term';
+
+define('AJAX_SCRIPT', true);
+ 
+require_once('../../config.php');
+
+$boxid = required_param('id', PARAM_ALPHANUM);
+$state = required_param('state', PARAM_INT);
+
+require_login();
+ 
+//get the course expansion info from user preference
+$boxes_data = get_user_preferences('semester_sortierung_boxes', 'a:0:{}');
+$boxes_data = @unserialize($boxes_data);
+
+if (!is_array($boxes_data)) {
+    $boxes_data = array();
+}
+$boxes_data[$boxid] = $state;
+
+$newvalue = serialize($boxes_data);
+
+set_user_preference('semester_sortierung_boxes', $newvalue);

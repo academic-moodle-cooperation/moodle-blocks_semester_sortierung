@@ -1,0 +1,61 @@
+/* semester sortierung css */
+.block_semester_sortierung .loadingmodinfo {
+    margin: -1px -1px 5px;
+}
+
+.block_semester_sortierung .expand_button  .plus{
+    background-image: url([[pix:t/switch_plus]]);
+    background-position: 0px -2px;
+    display: inline-block;
+    height: 10px;
+    width: 12px;
+}
+
+.block_semester_sortierung .expand_button  .minus{
+    background-image: url([[pix:t/switch_minus]]);
+    background-position: 0px -2px;
+    display: inline-block;
+    height: 10px;
+    width: 12px;
+}
+
+.block_semester_sortierung .expand_button  .loading{
+    background-image: url([[pix:i/loading_small]]);
+    display: inline-block;
+    background-size: 14px 14px;
+    height: 14px;
+    width: 14px;
+    margin: 0 -2px -2px 2px;
+}
+
+.block_semester_sortierung .expand_button {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.block_semester_sortierung fieldset {
+    border: 1px solid #DDD;
+    padding: 0 5px 5px;
+}
+
+.block_semester_sortierung .semesteroverviewcontainer > fieldset {    
+    padding-top: 0px;
+}
+
+.block_semester_sortierung legend a {
+    font-weight: bold;
+    color: #3D4653;
+    font-size: 16px;
+}
+
+.block_semester_sortierung legend h3.main {
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+
+.block_semester_sortierung legend .main  a {
+    font-weight: bold;
+    color: #002C73;
+    font-size: 108%;
+}

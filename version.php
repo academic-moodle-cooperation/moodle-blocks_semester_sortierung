@@ -1,6 +1,5 @@
 <?php
-
-// This file is part of Moodle - http://moodle.org/
+// This is Semester overview block for Moodle.
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,5 +13,17 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Semester sortierung version page
+ *
+ * @package blocks_semester_sortierung
+ * @author Simeon Naydenov
+ * @copyright 2012 Vienna University of Technology
+ */
 
-$plugin->version = 2010021100;
+
+defined('MOODLE_INTERNAL') || die();
+
+$plugin->version = 2013010904;
+$plugin->requires  = 2012112900;        // Requires this Moodle version
+$plugin->component = 'block_semester_sortierung'; // Full name of the plugin (used for diagnostics)
