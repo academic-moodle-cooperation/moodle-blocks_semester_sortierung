@@ -59,3 +59,12 @@
     color: #002C73;
     font-size: 108%;
 }
+
+
+.block_semester_sortierung legend .main  a:hover {
+    color: #CC0033;
+}
+
+.block_semester_sortierung legend .main  a.dimmed {
+    color: #AAAAAA;
+}
