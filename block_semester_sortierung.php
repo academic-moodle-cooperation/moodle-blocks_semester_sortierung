@@ -400,6 +400,19 @@ class block_semester_sortierung extends block_base {
             echo html_writer::end_tag('div');
         //}
         echo html_writer::end_tag('div');
+        
+        print '<noscript>
+        <style type="text/css">
+            div.semestersortierung {
+                height: auto !important;
+                overflow: visible !important;
+            }
+            
+            #semesteroverviewcontainer .expand_button {
+                display: none !important;
+            }
+        </style>
+        </noscript>';
 
         //prints remote courses.. standard behavior like in course overview block
         if (!empty($remote_courses)) {
