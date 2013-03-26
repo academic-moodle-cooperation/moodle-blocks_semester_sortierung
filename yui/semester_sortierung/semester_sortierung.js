@@ -19,17 +19,15 @@ SEMSORT.prototype = {
         Y.delegate('click', function(e){self.ajaxLoad(e);}, node.one('#semesteroverviewcontainer'), '.semestersortierung .expand_button');
         Y.delegate('click', function(e){self.setNewStatus(e);}, node.one('#semesteroverviewcontainer'), 'fieldset legend');
     },
-    
-    
+
     setNewStatus : function(e) {
-        //e.currentTarget.next().getAttribute('class');
-        
+
         var stat = e.currentTarget.next().getStyle('overflow') == 'visible' ? '1':'0';
         var params = {
             id : e.currentTarget.getAttribute('id'),
             state: stat,
         };
-        Y.io(M.cfg.wwwroot+'/blocks/semester_sortierung/ajax_setstate.php', {                
+        Y.io(M.cfg.wwwroot+'/blocks/semester_sortierung/ajax_setstate.php', {
                 method:'GET',
                 data:  build_querystring(params),
                 context:this
@@ -39,7 +37,7 @@ SEMSORT.prototype = {
     ajaxLoad : function(e) {
         var courseid = new String(e.currentTarget);
         courseid = courseid.substring(8, courseid.indexOf(' '));
-        var targetDiv = Y.one('#sbox' + courseid)._node;        
+        var targetDiv = Y.one('#sbox' + courseid)._node;
         togglesemesterbox(courseid);
         if (targetDiv.innerHTML == '') {
             var params = {

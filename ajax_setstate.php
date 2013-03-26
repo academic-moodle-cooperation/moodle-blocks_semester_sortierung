@@ -23,14 +23,14 @@
  */
 
 define('AJAX_SCRIPT', true);
- 
+
 require_once('../../config.php');
 
 $boxid = required_param('id', PARAM_ALPHANUM);
 $state = required_param('state', PARAM_INT);
 
 require_login();
- 
+
 //get the course expansion info from user preference
 $boxes_data = get_user_preferences('semester_sortierung_boxes', 'a:0:{}');
 $boxes_data = @unserialize($boxes_data);

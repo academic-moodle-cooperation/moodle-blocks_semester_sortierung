@@ -27,23 +27,23 @@ defined('MOODLE_INTERNAL') || die();
 
 function xmldb_block_semester_sortierung_upgrade($oldversion, $block) {
     global $DB;
-    
+
     if ($oldversion < 2013010904) {
         $settings = $DB->get_records_list('config', 'name', array('semester_sortierung_wintermonths',
             'semester_sortierung_sortcourses'));
-            
+
         $dataobject = new stdClass;
         $dataobject->plugin = 'blocks/semester_sortierung';
         foreach ($settings as $id => $settingobj) {
             $dataobject->name = substr($settingobj->name, 20);
             $dataobject->value = $settingobj->value;
-            if (!$DB->record_exists('config_plugins', array('plugin' => 'blocks/semester_sortierung', 'name' => $dataobject->name))) {
+            if (!$DB->record_exists('config_plugins', array('plugin'=>'blocks/semester_sortierung', 'name' => $dataobject->name))) {
                 $DB->insert_record('config_plugins', $dataobject);
                 $DB->delete_records('config', array('name' => $settingobj->name));
             }
-        }        
+        }
     }
-    
+
     upgrade_block_savepoint(true, 2013010904, 'semester_sortierung');
 
     return true;

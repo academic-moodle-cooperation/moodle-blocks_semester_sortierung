@@ -20,16 +20,16 @@
  * @author Simeon Naydenov
  * @copyright 2012 Vienna University of Technology
  */
- 
+
 defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
 
     $configs = array();
-    
+
     $configs[] = new admin_setting_configcheckbox('sortcourses',
         get_string('sortcourse', 'block_semester_sortierung'), get_string('sortcoursedesc', 'block_semester_sortierung'), '1');
-    
+
     // setting for configuring which months belong to the winter semester..
     // 12 checkboxes for each month; jan, july-dec should be checked by default
     $monthsarray = array();
@@ -40,12 +40,11 @@ if ($ADMIN->fulltree) {
             $selected['mon' . (($i+1) < 10?'0':'') .  strval($i+1)] = 1;
         }
     }
-    
+
     $configs[] = new admin_setting_configmulticheckbox('wintermonths',
         get_string('wintermonths', 'block_semester_sortierung'), get_string('monthsdesc', 'block_semester_sortierung'),
         $selected, $monthsarray);
-    
-    
+
     foreach ($configs as $config) {
         $config->plugin = 'blocks/semester_sortierung';
         $settings->add($config);

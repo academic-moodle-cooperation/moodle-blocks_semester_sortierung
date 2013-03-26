@@ -23,7 +23,7 @@
  */
 
 define('AJAX_SCRIPT', true);
- 
+
 require_once('../../config.php');
 
 $cid = required_param('cid', PARAM_INT);
@@ -31,7 +31,6 @@ $cid = required_param('cid', PARAM_INT);
 $course = $DB->get_record('course', array('id' => $cid), '*', MUST_EXIST);
 require_login($course);
 
-//$PAGE->set_context(CONTEXT_USER, $USER->id);
 $context = context_user::instance($USER->id);
 $PAGE->set_context($context);
 
@@ -39,7 +38,7 @@ print $OUTPUT->header();
 print $cid . '***';
 $mods = get_fast_modinfo($course);
 $mods_array = array();
-foreach ($mods->cms as $modinfo) {    
+foreach ($mods->cms as $modinfo) {
     if (!in_array($modinfo->modname, $mods_array)) {
         array_push($mods_array, $modinfo->modname);
     }

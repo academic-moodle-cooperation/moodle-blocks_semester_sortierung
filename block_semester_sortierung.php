@@ -64,17 +64,8 @@ class block_semester_sortierung extends block_base {
         if ($this->content !== null) {
             return $this->content;
         }
-        /*
-        if (isset($this->config)) {
-            $config = $this->config;
-            echo 'AAAA';
-        } else{
-            // TODO: Move these config settings to proper ones using component name
-            echo 'BBBB';*/
-            $config = get_config('blocks/semester_sortierung');
-            $this->config = $config;
-        //}
-
+        $config = get_config('blocks/semester_sortierung');
+        $this->config = $config;
 
         $this->content = new stdClass();
         $this->content->text = '';
@@ -226,9 +217,7 @@ class block_semester_sortierung extends block_base {
      */
     private function get_semester_from_date($startdate) {
         global $CFG;
-        //$month = date("m", $startdate);
         $month = userdate($startdate, '%m');
-        //$year = date("Y", $startdate);
         $year = userdate($startdate, '%Y');
         $prevyear = strval((intval($year) - 1));
         $nextyear = strval((intval($year) + 1));
@@ -290,7 +279,7 @@ class block_semester_sortierung extends block_base {
         if (!is_array($boxes_data)) {
             $boxes_data = array();
         }
-        
+
         foreach ($sortedcourses as $id => $courseinfo) {
             if (isset($boxes_data['c'.$id]) && $boxes_data['c'.$id] == '1') {
                 $real_sortedcourses[$id] = $courseinfo;
@@ -352,7 +341,7 @@ class block_semester_sortierung extends block_base {
                     echo html_writer::start_tag('div', array( 'id' => $boxid, 'style' => $style, 'class' => 'semestersortierung'));
 
                 }
-            } else if($first) {
+            } else if ($first) {
                 $first = false;
                 print html_writer::start_tag('div', array( 'class' => 'semestersortierung'));;
             }
@@ -400,14 +389,14 @@ class block_semester_sortierung extends block_base {
             echo html_writer::end_tag('div');
         //}
         echo html_writer::end_tag('div');
-        
+
         print '<noscript>
         <style type="text/css">
             div.semestersortierung {
                 height: auto !important;
                 overflow: visible !important;
             }
-            
+
             #semesteroverviewcontainer .expand_button {
                 display: none !important;
             }
