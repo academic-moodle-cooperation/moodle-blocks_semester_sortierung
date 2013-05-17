@@ -22,20 +22,12 @@
  * @copyright 2012 Vienna University of Technology
  */
 
-define('AJAX_SCRIPT', true);
-
-require_once('../../config.php');
-
-$cid = required_param('cid', PARAM_INT);
-
 $course = $DB->get_record('course', array('id' => $cid), '*', MUST_EXIST);
 require_login($course);
-
 $context = context_user::instance($USER->id);
 $PAGE->set_context($context);
 
 print $OUTPUT->header();
-print $cid . '***';
 $mods = get_fast_modinfo($course);
 $mods_array = array();
 foreach ($mods->cms as $modinfo) {
@@ -44,7 +36,7 @@ foreach ($mods->cms as $modinfo) {
     }
 }
 sort($mods_array);
-
+//code copied from course_overview block, that's why $USER is used, although discouraged
 if (isset($USER->lastcourseaccess[$course->id])) {
     $course->lastaccess = $USER->lastcourseaccess[$course->id];
 } else {
@@ -64,11 +56,9 @@ foreach ($mods_array as $mod) {
     }
 }
 if (isset($htmlarray[$course->id])) {
-    echo $OUTPUT->box_start('coursebox');
+    $content = '';
     foreach ($htmlarray[$course->id] as $modname => $modinfo) {
-        print $modinfo;
+        $content .= $modinfo;
     }
-    echo $OUTPUT->box_end();
-} else {
-    print '<div></div>';
+    print html_writer::tag('div', $content, array('class' => 'coursebox'));
 }

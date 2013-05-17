@@ -3,36 +3,6 @@
     margin: -1px -1px 5px;
 }
 
-.block_semester_sortierung .expand_button  .plus{
-    background-image: url([[pix:t/switch_plus]]);
-    background-position: 0px -2px;
-    display: inline-block;
-    height: 10px;
-    width: 12px;
-}
-
-.block_semester_sortierung .expand_button  .minus{
-    background-image: url([[pix:t/switch_minus]]);
-    background-position: 0px -2px;
-    display: inline-block;
-    height: 10px;
-    width: 12px;
-}
-
-.block_semester_sortierung .expand_button  .loading{
-    background-image: url([[pix:i/loading_small]]);
-    display: inline-block;
-    background-size: 14px 14px;
-    height: 14px;
-    width: 14px;
-    margin: 0 -2px -2px 2px;
-}
-
-.block_semester_sortierung .expand_button {
-    font-weight: bold;
-    font-size: 14px;
-}
-
 .block_semester_sortierung fieldset {
     border: 1px solid #DDD;
     padding: 0 5px 5px;
@@ -42,29 +12,72 @@
     padding-top: 0px;
 }
 
-.block_semester_sortierung legend a {
+.block_semester_sortierung .semester > legend {
     font-weight: bold;
+    cursor: pointer;
     color: #3D4653;
     font-size: 16px;
 }
-
-.block_semester_sortierung legend h3.main {
-    margin-bottom: 5px;
+.block_semester_sortierung .course > legend  {
     margin-top: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
 }
 
-
-.block_semester_sortierung legend .main  a {
+.block_semester_sortierung .course > legend  > a {
     font-weight: bold;
     color: #002C73;
-    font-size: 108%;
+    font-size: 15.15px;
 }
 
-
-.block_semester_sortierung legend .main  a:hover {
+.block_semester_sortierung .course > legend > a:hover {
     color: #CC0033;
 }
 
-.block_semester_sortierung legend .main  a.dimmed {
+.block_semester_sortierung .course > legend > a.dimmed {
     color: #AAAAAA;
+}
+
+.block_semester_sortierung .expandablebox {
+    overflow: hidden;
+    height: 1px;
+}
+
+.block_semester_sortierung .expanded > .expandablebox,
+.block_semester_sortierung .no_javascript .semester > .expandablebox  {
+    height: auto !important;
+    overflow: visible !important;
+}
+
+.block_semester_sortierung legend > .imgbox {    
+    background-position: 0px -2px;
+    background-image: url([[pix:t/switch_plus]]);
+    display: inline-block;
+    height: 10px;
+    width: 12px;
+}
+
+.block_semester_sortierung .expanded  > legend > .imgbox {
+    background-image: url([[pix:t/switch_minus]]);
+}
+
+.block_semester_sortierung .loading > legend > .imgbox{
+    background-image: url([[pix:i/loading_small]]);
+    background-position: 0 0;
+    display: inline-block;
+    background-size: 14px 14px;
+    height: 14px;
+    width: 14px;
+    margin: 0 -2px -2px 2px;
+}
+
+.block_semester_sortierung fieldset fieldset {
+    border: 1px solid #DDD; 
+    padding-left: 5px;
+    margin-left: 5px;
+}
+
+.block_semester_sortierung .no_javascript .imgbox,
+.block_semester_sortierung .no_javascript .course > .expandablebox {
+    display: none;
 }

@@ -1,4 +1,3 @@
-var temptest;
 YUI.add('moodle-block_semester_sortierung-semester_sortierung', function(Y){
 var SEMSORT = function(config) {
     SEMSORT.superclass.constructor.apply(this, arguments);
@@ -14,59 +13,46 @@ SEMSORT.prototype = {
     initializer : function(config) {
         this.id = config.id;
         var node = Y.one('#inst'+config.id);
-
+        Y.one('.no_javascript').removeClass('no_javascript');
         var self = this;
-        Y.delegate('click', function(e){self.ajaxLoad(e);}, node.one('#semesteroverviewcontainer'), '.semestersortierung .expand_button');
         Y.delegate('click', function(e){self.setNewStatus(e);}, node.one('#semesteroverviewcontainer'), 'fieldset legend');
     },
 
     setNewStatus : function(e) {
-
-        var stat = e.currentTarget.next().getStyle('overflow') == 'visible' ? '1':'0';
+        if (e.target.hasClass('courselink')) {
+            return; //don't do anything when a link is pressed 
+        }
+        var fldset = e.currentTarget.ancestor();
+        fldset.toggleClass('expanded');
+        
+        var btype = fldset.hasClass('semester') ? 's' : 'c';
+        var bstate = fldset.hasClass('expanded') ? 1 : 0;
+        var targetdiv = e.currentTarget.next();
+        var useajax = btype == 'c' && targetdiv.getHTML() == ''  && bstate == 1 ? 1 : 0;
+        
         var params = {
-            id : e.currentTarget.getAttribute('id'),
-            state: stat,
+            id: fldset.getData('id'),
+            state: bstate,
+            boxtype: btype,
+            ajax: useajax
         };
+        if (useajax) {
+            fldset.addClass('loading');
+        }
         Y.io(M.cfg.wwwroot+'/blocks/semester_sortierung/ajax_setstate.php', {
                 method:'GET',
                 data:  build_querystring(params),
-                context:this
-            });
-    },
-
-    ajaxLoad : function(e) {
-        var courseid = new String(e.currentTarget);
-        courseid = courseid.substring(8, courseid.indexOf(' '));
-        var targetDiv = Y.one('#sbox' + courseid)._node;
-        togglesemesterbox(courseid);
-        if (targetDiv.innerHTML == '') {
-            var params = {
-                cid : courseid
-            };
-            Y.one('#imgbox' + courseid)._node.className = 'loading';
-
-            Y.io(M.cfg.wwwroot+'/blocks/semester_sortierung/ajax_modinfo.php', {
-                method:'GET',
-                data:  build_querystring(params),
+                context:this,                
                 on: {
-                    complete: this.ajaxProcessResponse
+                    complete: function(t, outcome) {
+                        if (useajax == 1) {
+                            fldset.removeClass('loading');
+                            targetdiv.setHTML(outcome.responseText);
+                        }
+                    }
                 },
-                context:this
             });
-        }
     },
-
-    ajaxProcessResponse : function(tid, outcome) {
-        var response = outcome.responseText;
-        var delim_pos = response.indexOf('***');
-        var courseid = response.substring(0, delim_pos);
-        response = response.substring(delim_pos+3);
-        var targetDiv = Y.one('#sbox' + courseid)._node;
-        targetDiv.innerHTML = response;
-        Y.one('#imgbox' + courseid).setAttribute('class', 'minus');
-        //togglesemesterbox(courseid);
-        //self.setNewStatus(e);
-    }
 }
 // The tree extends the YUI base foundation.
 Y.extend(SEMSORT, Y.Base, SEMSORT.prototype, {
@@ -98,20 +84,3 @@ M.block_semester_sortierung = M.block_semester_sortierung || {
 };
 
 }, '@VERSION@', {requires:['base', 'core_dock', 'io-base', 'node', 'node-base','dom', 'event-custom', 'event-delegate', 'json-parse']});
-
-function togglesemesterbox(boxid) {
-    var mybox = document.getElementById("sbox" + boxid);
-    var imgbox = document.getElementById("imgbox" + boxid);
-    var vis = 0;
-    if (mybox.style.overflow == "visible") {
-        mybox.style.overflow = "hidden";
-        mybox.style.height = "1px";
-        imgbox.className = "plus";
-    }
-    else {
-        mybox.style.overflow = "visible";
-        mybox.style.height = "";
-        imgbox.className = "minus";
-        vis = 1;
-    }
-}

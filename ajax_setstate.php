@@ -28,18 +28,36 @@ require_once('../../config.php');
 
 $boxid = required_param('id', PARAM_ALPHANUM);
 $state = required_param('state', PARAM_INT);
+$courseajax = optional_param('ajax', 0, PARAM_INT);
+$boxtype = required_param('boxtype', PARAM_ALPHA);
+
 
 require_login();
 
-//get the course expansion info from user preference
-$boxes_data = get_user_preferences('semester_sortierung_boxes', 'a:0:{}');
-$boxes_data = @unserialize($boxes_data);
-
-if (!is_array($boxes_data)) {
-    $boxes_data = array();
+if ($boxtype == 's') {
+    $prefname = 'semester_sortierung_semesters';
+} else {
+    $prefname = 'semester_sortierung_courses';
 }
-$boxes_data[$boxid] = $state;
+if ($expanded = get_user_preferences($prefname, '')) {
+    $expanded = explode(',', $expanded);
+    $expanded = array_flip($expanded);
+} else {
+    $expanded = array();
+}
 
-$newvalue = serialize($boxes_data);
+if ($state) {
+    $expanded[$boxid] = 1;
+} else {
+    if (isset($expanded[$boxid])) {
+        unset($expanded[$boxid]);
+    }
+}
+$expanded = implode(',', array_keys($expanded));
 
-set_user_preference('semester_sortierung_boxes', $newvalue);
+set_user_preference($prefname, $expanded);
+
+if ($boxtype == 'c' && $courseajax) {
+    $cid = $boxid;
+    include('ajax_modinfo.php');
+}
