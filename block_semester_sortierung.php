@@ -74,7 +74,7 @@ class block_semester_sortierung extends block_base {
 
         $content = array();
         //get the information about the enrolled courses
-        $courses = enrol_get_my_courses('id, shortname, modinfo, sectioncache', 'visible DESC,sortorder ASC');
+        $courses = enrol_get_my_courses('id, fullname, shortname, modinfo, sectioncache', 'visible DESC, fullname ASC');
 
         //some moodle hacks..
         $site = get_site();
@@ -183,14 +183,24 @@ class block_semester_sortierung extends block_base {
             $course->semester = $semester[0];
             $course->sortid = $semester[1];
             if (empty($sortedcourses[$semester[1]])) {
-                $sortedcourses[$semester[1]] = array();
+                $sortedcourses[$semester[1]] = array('hidden' => array(), 'visible'=>array());
             }
-            array_push($sortedcourses[$semester[1]], $course);
+            if ($course->visible) {
+                $sortedcourses[$semester[1]]['visible'][] = $course;
+            } else {
+                $sortedcourses[$semester[1]]['hidden'][] = $course;
+            }
+            //array_push($sortedcourses[$semester[1]], $course);
         }
         ksort($sortedcourses);
         $courses = array();
         foreach ($sortedcourses as $semestercourses) {
-            foreach ($semestercourses as $course) {
+            usort($semestercourses['visible'], 'block_sememster_sortierung_usort');
+            usort($semestercourses['hidden'], 'block_sememster_sortierung_usort');
+            foreach ($semestercourses['visible'] as $course) {
+                $courses[$course->id] = $course;
+            }
+            foreach ($semestercourses['hidden'] as $course) {
                 $courses[$course->id] = $course;
             }
         }
@@ -218,27 +228,28 @@ class block_semester_sortierung extends block_base {
     private function get_semester_from_date($startdate) {
         global $CFG;
         $month = userdate($startdate, '%m');
-        $year = userdate($startdate, '%Y');
-        $prevyear = strval((intval($year) - 1));
-        $nextyear = strval((intval($year) + 1));
+        $year = intval(userdate($startdate, '%Y'));
+        $prevyear = strval(($year - 1));
         $semester = "";
-        $sortid = (3000 - intval($year))*10;
+        $sortid = 3000;
         if (strpos($this->config->wintermonths, 'mon'.$month) !== false) {
             if (intval($month) <= 6) {
-                $semester = get_string('wintersem', 'block_semester_sortierung') . '  ' . $prevyear. '/' . $year;
-                $sortid -= 1;
-            } else {
-                $semester = get_string('wintersem', 'block_semester_sortierung') . '  ' . $year .'/' . $nextyear;
-                $sortid -= 3;
-
+                $year -= 1;
             }
+            $sortid -= 3;
+            $semester = get_string('wintersem', 'block_semester_sortierung') . '  ' . strval($year) .'/' . strval($year + 1);
         } else {
             $semester = get_string('summersem', 'block_semester_sortierung') . '  ' . $year;
             $sortid -= 2;
         }
+        $sortid -= $year * 10;
         return array($semester, $sortid);
 
     }
 
 
+}
+
+function block_sememster_sortierung_usort($a, $b) {
+    return strcasecmp(trim($a->fullname), trim($b->fullname));
 }
