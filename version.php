@@ -24,6 +24,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2013010904;
+$plugin->version = 2013010905;
 $plugin->requires  = 2012112900;        // Requires this Moodle version
 $plugin->component = 'block_semester_sortierung'; // Full name of the plugin (used for diagnostics)

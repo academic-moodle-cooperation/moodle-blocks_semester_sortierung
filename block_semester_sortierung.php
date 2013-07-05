@@ -154,7 +154,8 @@ class block_semester_sortierung extends block_base {
      * @return boolean
      */
     public function user_can_edit() {
-        return false;
+        //return false; not needed in 2.5 since block protection is working
+        return true;
     }
 
     /**
