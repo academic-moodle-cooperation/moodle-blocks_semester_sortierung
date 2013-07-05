@@ -81,3 +81,20 @@
 .block_semester_sortierung .no_javascript .course > .expandablebox {
     display: none;
 }
+
+.block_semester_sortierung .togglefavorites.invisible {
+    display: none;
+}
+.block_semester_sortierung .semester .favoriteicon {
+    display: none;
+}
+
+.block_semester_sortierung .no_javascript .semester .favoriteicon,
+.block_semester_sortierung .semester.expanded .favoriteicon{
+    height: 16px;
+    width: 17px;
+    right: 32px;
+    margin-top: -12px;
+    position: absolute;
+    display: block !important;
+}

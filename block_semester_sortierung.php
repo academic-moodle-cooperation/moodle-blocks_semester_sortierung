@@ -59,6 +59,7 @@ class block_semester_sortierung extends block_base {
      * @return object
      */
     public function get_content() {
+        require_once(__DIR__ . '/locallib.php');
         global $USER, $CFG;
         //code copied from course_overview block, that's why $USER is used, although discouraged
         //if content already present, spare time
@@ -75,7 +76,15 @@ class block_semester_sortierung extends block_base {
         $content = array();
         //get the information about the enrolled courses
         $courses = enrol_get_my_courses('id, fullname, shortname, modinfo, sectioncache', 'visible DESC, fullname ASC');
-
+        
+        $cid = optional_param('block_semester_sortierung_favorites', null, PARAM_ALPHANUM);
+        $status = optional_param('status', null, PARAM_ALPHANUM);
+        
+        if (!empty($cid)) {
+            block_semester_sortierung_toggle_fav($cid, $status);
+        }
+        
+        
         //some moodle hacks..
         $site = get_site();
         $course = $site; //just in case we need the old global $course hack
@@ -177,7 +186,16 @@ class block_semester_sortierung extends block_base {
      */
     private function fill_course_semester($courses) {
         global $CFG;
+        require_once(__DIR__ . '/locallib.php');
         $sortedcourses = array();
+        
+        
+        if ($favorites = get_user_preferences('semester_sortierung_favorites', '')) {
+            $favorites = array_flip(explode(',', $favorites));
+        } else {
+            $favorites = array();
+        }
+        
         foreach ($courses as $course) {
             $semester = $this->get_semester_from_date($course->startdate);
             $course->semester = $semester[0];
@@ -248,8 +266,4 @@ class block_semester_sortierung extends block_base {
     }
 
 
-}
-
-function block_sememster_sortierung_usort($a, $b) {
-    return strcasecmp(trim($a->fullname), trim($b->fullname));
 }

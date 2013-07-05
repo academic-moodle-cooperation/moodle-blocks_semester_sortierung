@@ -27,3 +27,7 @@ $string['wintermonths'] = 'Months of the winter semester';
 $string['monthsdesc'] = 'Not marked months = Months of the summer semester. Months January - June still count for the winter semester from the previous year';
 $string['summersem'] = 'Summer term';
 $string['wintersem'] = 'Winter term';
+
+$string['favorites'] = 'My favorites';
+$string['addtofavorites'] = 'Add to favorites';
+$string['removefromfavorites'] = 'Remove from favorites';

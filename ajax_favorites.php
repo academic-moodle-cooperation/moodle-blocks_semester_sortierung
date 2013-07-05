@@ -13,21 +13,24 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Semester overview lang file
+ * This file updates the user_preference for the block favorites courses
  *
  * @package blocks_semester_sortierung
  * @author Simeon Naydenov
  * @copyright 2012 Vienna University of Technology
  */
-$string['pluginname'] = 'Semesterübersicht';
-$string['sortcourse'] = 'Kurse nach Semestern sortieren';
-$string['sortcoursedesc'] = ' Instanzweit an/aus';
-$string['wintermonths'] = 'Monate des Wintersemesters';
-$string['monthsdesc'] = 'Nicht markierte Monate = Monate des Sommersemesters. Die Monate 1-6 zählen noch zum Wintersemster des Vorjahres';
-$string['summersem'] = 'Sommersemester';
-$string['wintersem'] = 'Wintersemester';
 
-$string['favorites'] = 'Meine Favoriten';
-$string['addtofavorites'] = 'Zu Favoriten hinzufügen';
-$string['removefromfavorites'] = 'Aus Favoriten entfernen';
+define('AJAX_SCRIPT', true);
+
+require_once('../../config.php');
+require_once(__DIR__ . '/locallib.php');
+
+$cid = required_param('id', PARAM_ALPHANUM);
+$status = required_param('status', PARAM_INT);
+
+
+require_login();
+
+block_semester_sortierung_toggle_fav($cid, $status);

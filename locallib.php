@@ -13,21 +13,38 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Semester overview lang file
+ * local functions
  *
  * @package blocks_semester_sortierung
  * @author Simeon Naydenov
  * @copyright 2012 Vienna University of Technology
  */
-$string['pluginname'] = 'Semesterübersicht';
-$string['sortcourse'] = 'Kurse nach Semestern sortieren';
-$string['sortcoursedesc'] = ' Instanzweit an/aus';
-$string['wintermonths'] = 'Monate des Wintersemesters';
-$string['monthsdesc'] = 'Nicht markierte Monate = Monate des Sommersemesters. Die Monate 1-6 zählen noch zum Wintersemster des Vorjahres';
-$string['summersem'] = 'Sommersemester';
-$string['wintersem'] = 'Wintersemester';
 
-$string['favorites'] = 'Meine Favoriten';
-$string['addtofavorites'] = 'Zu Favoriten hinzufügen';
-$string['removefromfavorites'] = 'Aus Favoriten entfernen';
+defined('MOODLE_INTERNAL') || die;
+
+function block_sememster_sortierung_usort($a, $b) {
+    return strcasecmp(trim($a->fullname), trim($b->fullname));
+}
+
+function block_semester_sortierung_toggle_fav($courseid, $status) {
+    
+    if ($favorites = get_user_preferences('semester_sortierung_favorites', '')) {
+        $favorites = explode(',', $favorites);
+        $favorites = array_flip($favorites);
+    } else {
+        $favorites = array();
+    }
+
+    if ($status) {
+        $favorites[$courseid] = 1;
+    } else {
+        if (isset($favorites[$courseid])) {
+            unset($favorites[$courseid]);
+        }
+    }
+    $favorites = implode(',', array_keys($favorites));
+
+    set_user_preference('semester_sortierung_favorites', $favorites);
+}
