@@ -98,3 +98,7 @@
     position: absolute;
     display: block !important;
 }
+
+.block_semester_sortierung .coursebox div.info {
+    width: 100% !important;
+}

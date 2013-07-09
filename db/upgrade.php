@@ -42,9 +42,9 @@ function xmldb_block_semester_sortierung_upgrade($oldversion, $block) {
                 $DB->delete_records('config', array('name' => $settingobj->name));
             }
         }
+        upgrade_block_savepoint(true, 2013010904, 'semester_sortierung');
     }
 
-    upgrade_block_savepoint(true, 2013010904, 'semester_sortierung');
 
     return true;
 }
