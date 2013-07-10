@@ -31,3 +31,5 @@ $string['wintersem'] = 'Winter term';
 $string['favorites'] = 'My favorites';
 $string['addtofavorites'] = 'Add to favorites';
 $string['removefromfavorites'] = 'Remove from favorites';
+$string['enablefavorites'] = 'Show Favorites';
+$string['enablefavoritesdesc'] = 'Show a seperate section for courses chosen as favorites';

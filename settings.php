@@ -44,6 +44,9 @@ if ($ADMIN->fulltree) {
     $configs[] = new admin_setting_configmulticheckbox('wintermonths',
         get_string('wintermonths', 'block_semester_sortierung'), get_string('monthsdesc', 'block_semester_sortierung'),
         $selected, $monthsarray);
+    
+    $configs[] = new admin_setting_configcheckbox('enablefavorites',
+        get_string('enablefavorites', 'block_semester_sortierung'), get_string('enablefavoritesdesc', 'block_semester_sortierung'), '1');
 
     foreach ($configs as $config) {
         $config->plugin = 'blocks/semester_sortierung';

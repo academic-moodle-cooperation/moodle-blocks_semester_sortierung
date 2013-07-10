@@ -31,3 +31,5 @@ $string['wintersem'] = 'Wintersemester';
 $string['favorites'] = 'Meine Favoriten';
 $string['addtofavorites'] = 'Zu Favoriten hinzufügen';
 $string['removefromfavorites'] = 'Aus Favoriten entfernen';
+$string['enablefavorites'] = 'Favoriten zeigen';
+$string['enablefavoritesdesc'] = 'Zeige einen seperaten Abschitt für Kurse, die als Favoriten markiert wurden';

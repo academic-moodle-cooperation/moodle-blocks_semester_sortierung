@@ -6,6 +6,7 @@
 .block_semester_sortierung fieldset {
     border: 1px solid #DDD;
     padding: 0 5px 5px;
+    min-height: 20px;
 }
 
 .block_semester_sortierung .semesteroverviewcontainer > fieldset {
@@ -21,6 +22,7 @@
 .block_semester_sortierung .course > legend  {
     margin-top: 5px;
     margin-bottom: 5px;
+    background: none;
     cursor: pointer;
 }
 
@@ -50,11 +52,13 @@
 }
 
 .block_semester_sortierung legend > .imgbox {    
-    background-position: 0px -2px;
     background-image: url([[pix:t/switch_plus]]);
+    background-repeat: no-repeat;
+    background-position: 0px -2px;
     display: inline-block;
     height: 10px;
     width: 12px;
+    zoom: 1;  *display: inline; *height: 15px; /* IE7 Hack */
 }
 
 .block_semester_sortierung .expanded  > legend > .imgbox {
@@ -69,6 +73,7 @@
     height: 14px;
     width: 14px;
     margin: 0 -2px -2px 2px;
+    zoom: 1;  *display: inline; *height: 15px; /* IE7 Hack */
 }
 
 .block_semester_sortierung fieldset fieldset {
@@ -101,4 +106,8 @@
 
 .block_semester_sortierung .coursebox div.info {
     width: 100% !important;
+}
+
+.block_semester_sortierung .semester.empty {
+    display: none;
 }

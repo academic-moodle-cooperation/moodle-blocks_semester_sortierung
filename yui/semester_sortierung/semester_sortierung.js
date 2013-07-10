@@ -2,7 +2,6 @@ YUI.add('moodle-block_semester_sortierung-semester_sortierung', function(Y){
 var SEMSORT = function(config) {
     SEMSORT.superclass.constructor.apply(this, arguments);
 }
-var te;
 SEMSORT.prototype = {
     /**
      * semsort id(block instance id)
@@ -29,9 +28,12 @@ SEMSORT.prototype = {
             target.one('.togglefavorites.on').removeClass('invisible');
             target.one('.togglefavorites.off').addClass('invisible');
             target.setData('fav', '1');
-            Y.one('#semesteroverviewcontainer fieldset.fav').insert(target.cloneNode(true));
+            var newtarget = target.cloneNode(true);
+            newtarget.setData('fav', 1);
+            Y.one('#semesteroverviewcontainer fieldset.fav').insert(newtarget);
             stat = '1';
             this.sortFavorites();
+            Y.one('#semesteroverviewcontainer fieldset.fav').removeClass('empty');
         } else {
             Y.one('#semesteroverviewcontainer fieldset.fav').all('fieldset.course').each(function(e) {
                     if (e.getData('id') == cid) {
@@ -45,6 +47,10 @@ SEMSORT.prototype = {
                         e.setData('fav', '0');
                     }
                 });
+            var favcount = Y.one('#semesteroverviewcontainer fieldset.fav').all('fieldset.course')._nodes.length;
+            if (favcount <= 0) {
+                Y.one('#semesteroverviewcontainer fieldset.fav').addClass('empty');
+            }
         }
         var params = {
             id: cid,
@@ -53,12 +59,7 @@ SEMSORT.prototype = {
         Y.io(M.cfg.wwwroot+'/blocks/semester_sortierung/ajax_favorites.php', {
             method:'GET',
             data:  build_querystring(params),
-            context:this,                
-            /*on: {
-                complete: function(t, outcome) {
-                    console.log('complete');
-                }
-            },*/
+            context:this
         });
     },
     
@@ -69,6 +70,7 @@ SEMSORT.prototype = {
         nothidden.sort(this.customSorting);
         hidden.sort(this.customSorting);
         favs.all('fieldset.course').each(function(e){e.remove();});
+        favs = Y.one('#semesteroverviewcontainer fieldset.fav .expandablebox');
         for (var i = 0; i < nothidden.length; i++) {
             favs.appendChild(nothidden[i]);
         }
@@ -115,9 +117,9 @@ SEMSORT.prototype = {
                             targetdiv.setHTML(outcome.responseText);
                         }
                     }
-                },
+                }
             });
-    },
+    }
 }
 // The tree extends the YUI base foundation.
 Y.extend(SEMSORT, Y.Base, SEMSORT.prototype, {

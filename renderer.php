@@ -87,10 +87,12 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
         //whether the courses should be sorted
         $sorted = (isset($config->sortcourses) && $config->sortcourses == '1');
         
+        $showfavorites = (isset($config->enablefavorites) && $config->enablefavorites == '1');
         //initial box
         
         $content = '';
         $content_fav = array('hidden' => array(), 'visible' => array());
+        $favstoshow = false;
         $first = true;
         foreach ($sortedcourses as $course) { //needs work
             if ($sorted) {
@@ -116,6 +118,7 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
             $isfav = false;
             if (isset($favorites[strval($course->id)])) {
                 $isfav = true;
+                $favstoshow = true;
                 if (empty($course->visible)) {
                     $content_fav['hidden'][] = $course;
                 } else {
@@ -123,7 +126,7 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
                 }
                 
             }
-            $content .= $this->course_html($course, $htmlarray, isset($courses_expanded[strval($course->id)]), $isfav);
+            $content .= $this->course_html($course, $htmlarray, isset($courses_expanded[strval($course->id)]), $isfav, $showfavorites);
         }
         //closes the last semester box
         if ($sorted) {
@@ -131,7 +134,10 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
         } else {
             $content .= html_writer::end_tag('div');
         }
-        $content = $this->format_favorites($content_fav, $semesters_expanded, $htmlarray, $courses_expanded) . $content;
+        
+        if ($showfavorites) {
+            $content = $this->format_favorites($content_fav, $semesters_expanded, $htmlarray, $courses_expanded) . $content;
+        }
         
         $html .= html_writer::nonempty_tag('div', $content, array('id' => 'semesteroverviewcontainer', 'class' => 'no_javascript'));
         
@@ -156,8 +162,8 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
     }
     
     private function format_favorites($content_fav, $expanded_semesters, $htmlarray, $courses_expanded) {
-    
-        $content = $this->start_semester('fav', get_string('favorites', 'block_semester_sortierung'), $expanded_semesters, true);
+        $count = count($content_fav['visible']) + count($content_fav['hidden']);
+        $content = $this->start_semester('fav', get_string('favorites', 'block_semester_sortierung'), $expanded_semesters, true, $count <= 0);
         usort($content_fav['visible'], 'block_sememster_sortierung_usort');
         usort($content_fav['hidden'], 'block_sememster_sortierung_usort');
         foreach ($content_fav['visible'] as $course) {
@@ -170,10 +176,13 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
         return $content;
     }
     
-    private function start_semester($currentsemester, $semestertitle, $expanded_semesters, $first) {
+    private function start_semester($currentsemester, $semestertitle, $expanded_semesters, $first, $empty = false) {
         $html = '';
         $semestercode = $this->get_semester_code($currentsemester);
         $classes = array('semester');
+        if ($empty) {
+            $classes[] = 'empty';
+        }
         if (($first && count($expanded_semesters) == 0) || isset($expanded_semesters[$semestercode])) {
             $classes[] = 'expanded';
         }
@@ -195,7 +204,7 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
         return $html;
     }
     
-    private function course_html($course, $htmlarray, $courseexpanded, $isfav = false) {
+    private function course_html($course, $htmlarray, $courseexpanded, $isfav = false, $showfavorites = true) {
         //prints course as in standard course overview block
         $html = '';
         $classes = array('course');
@@ -218,8 +227,13 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
         $html .= '&nbsp;'. html_writer::link(new moodle_url('/course/view.php', array('id' => $course->id)),
             trim(format_string($course->fullname)), $attributes) . '&nbsp;';
         $html .= html_writer::end_tag('legend');
-        $html .= $this->get_favorites_icon($course->id, true, $isfav == true);
-        $html .= $this->get_favorites_icon($course->id, false, $isfav == false);
+        if ($showfavorites) {
+            $html .= $this->get_favorites_icon($course->id, true, $isfav == true);
+            $html .= $this->get_favorites_icon($course->id, false, $isfav == false);
+        } else {
+            $html .= html_writer::tag('div', '');
+            $html .= html_writer::tag('div', '');
+        }
         $html .= html_writer::start_tag('div', array('class' => 'expandablebox'));
         if (isset($htmlarray[$course->id])) {
             $html .= html_writer::start_tag('div', array('class' => 'coursebox'));

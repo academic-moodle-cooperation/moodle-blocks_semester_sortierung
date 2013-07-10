@@ -66,6 +66,8 @@ class block_semester_sortierung extends block_base {
         if ($this->content !== null) {
             return $this->content;
         }
+                
+        
         $config = get_config('blocks/semester_sortierung');
         $this->config = $config;
 
