@@ -254,11 +254,13 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
         $content = html_writer::start_tag('a', array(
             'href' => new moodle_url($PAGE->url, array('block_semester_sortierung_favorites' => $courseid, 'status' => ($addorrem ? '0' : '1'))),
             'class' => 'togglefavorites ' . ($addorrem ? 'on' : 'off') . ($isfav ? '' : ' invisible'),
-            'title' => get_string($addorrem ? 'removefromfavorites' : 'addtofavorites', 'block_semester_sortierung'),
+         /*   'title' => get_string($addorrem ? 'removefromfavorites' : 'addtofavorites', 'block_semester_sortierung'),
+            'alt' => get_string($addorrem ? 'removefromfavorites' : 'addtofavorites', 'block_semester_sortierung'),*/
             'data-fav' => strval($addorrem)));
         $content .= html_writer::empty_tag('img', array(
             'src' => $OUTPUT->pix_url($addorrem ? 'fav_on' : 'fav_off', 'block_semester_sortierung'),
             'alt' => get_string($addorrem ? 'removefromfavorites' : 'addtofavorites', 'block_semester_sortierung'),
+            'title' => get_string($addorrem ? 'removefromfavorites' : 'addtofavorites', 'block_semester_sortierung'),
             'class' => 'favoriteicon'));
         $content .= html_writer::end_tag('a');
         return $content;
