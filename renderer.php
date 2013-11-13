@@ -112,7 +112,7 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
                 }
             } else if ($first) {
                 $first = false;
-                $content .= html_writer::start_tag('div', array( 'class' => 'semestersortierung'));;
+                $content .= html_writer::start_tag('div', array( 'class' => 'semestersortierung nosemester semester'));;
         
             }
             $isfav = false;

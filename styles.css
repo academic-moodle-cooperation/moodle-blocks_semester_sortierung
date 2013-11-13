@@ -95,6 +95,7 @@
 }
 
 .block_semester_sortierung .no_javascript .semester .favoriteicon,
+.block_semester_sortierung .semester.nosemester .favoriteicon,
 .block_semester_sortierung .semester.expanded .favoriteicon{
     height: 16px;
     width: 17px;
