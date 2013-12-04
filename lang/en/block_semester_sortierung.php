@@ -33,3 +33,5 @@ $string['addtofavorites'] = 'Add to favorites';
 $string['removefromfavorites'] = 'Remove from favorites';
 $string['enablefavorites'] = 'Show Favorites';
 $string['enablefavoritesdesc'] = 'Show a seperate section for courses chosen as favorites';
+$string['semester_sortierung:addinstance'] = 'Add a new Semester overview block';
+$string['semester_sortierung:myaddinstance'] = 'Add a new Semester overview block to My home';

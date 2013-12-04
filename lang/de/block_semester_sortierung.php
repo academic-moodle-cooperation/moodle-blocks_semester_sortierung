@@ -33,3 +33,5 @@ $string['addtofavorites'] = 'Zu Favoriten hinzufügen';
 $string['removefromfavorites'] = 'Aus Favoriten entfernen';
 $string['enablefavorites'] = 'Favoriten zeigen';
 $string['enablefavoritesdesc'] = 'Zeige einen seperaten Abschitt für Kurse, die als Favoriten markiert wurden';
+$string['semester_sortierung:addinstance'] = 'Neuen Block \'Semesterübersicht\' hinzufügen';
+$string['semester_sortierung:myaddinstance'] = 'Neuen Block \'Semesterübersicht\' für \'Meine Startseite\'hinzufügen';
