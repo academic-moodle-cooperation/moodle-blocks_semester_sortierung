@@ -1,4 +1,3 @@
-<?php
 // This file is part of blocks_semester_sortierung for Moodle - http://moodle.org/
 //
 // It is free software: you can redistribute it and/or modify
@@ -15,9 +14,9 @@
 // If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * locallib.php
- * local functions
+ * README.txt
  *
+ * @version       2014-02-24
  * @package       blocks_semester_sortierung
  * @author        Andreas Hruska (andreas.hruska@tuwien.ac.at)
  * @author        Katarzyna Potocka (katarzyna.potocka@tuwien.ac.at)
@@ -26,29 +25,24 @@
  * @license       http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+Semester sortierung block
+==================
 
-function block_sememster_sortierung_usort($a, $b) {
-    return strcasecmp(trim($a->fullname), trim($b->fullname));
-}
+OVERVIEW
+================================================================================
 
-function block_semester_sortierung_toggle_fav($courseid, $status) {
-    
-    if ($favorites = get_user_preferences('semester_sortierung_favorites', '')) {
-        $favorites = explode(',', $favorites);
-        $favorites = array_flip($favorites);
-    } else {
-        $favorites = array();
-    }
+An enhanced version of the Course overview block. Provides the ability to 
+display courses grouped by semesters based on their startdate. 
+Features:
+* Favorite courses - courses chosen by the user to be displayed on top of all 
+courses
 
-    if ($status) {
-        $favorites[$courseid] = 1;
-    } else {
-        if (isset($favorites[$courseid])) {
-            unset($favorites[$courseid]);
-        }
-    }
-    $favorites = implode(',', array_keys($favorites));
+INSTALLAION
+================================================================================
+Requires Moodle version 2.2 - 2012112900
 
-    set_user_preference('semester_sortierung_favorites', $favorites);
-}
+Just place the plugin contents inside moodle/blocks/semester_sortierung folder and go to 
+Administration-> Notifications to install the new plugin.
+
+CHANGE LOG
+================================================================================

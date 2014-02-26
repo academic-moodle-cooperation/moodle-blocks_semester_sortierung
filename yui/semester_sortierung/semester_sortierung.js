@@ -1,3 +1,14 @@
+/**
+ * yui/semester_sortierung/semester_sortierung.js
+ *
+ * @package       blocks_semester_sortierung
+ * @author        Andreas Hruska (andreas.hruska@tuwien.ac.at)
+ * @author        Katarzyna Potocka (katarzyna.potocka@tuwien.ac.at)
+ * @author        Simeon Naydenov
+ * @copyright     2014 Academic Moodle Cooperation {@link http://www.academic-moodle-cooperation.org}
+ * @license       http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 YUI.add('moodle-block_semester_sortierung-semester_sortierung', function(Y){
 var SEMSORT = function(config) {
     SEMSORT.superclass.constructor.apply(this, arguments);
