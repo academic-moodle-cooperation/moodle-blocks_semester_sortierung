@@ -13,7 +13,9 @@ SEMSORT.prototype = {
     initializer : function(config) {
         this.id = config.id;
         var node = Y.one('#inst'+config.id);
-        Y.one('.no_javascript').removeClass('no_javascript');
+        if (Y.one('.no_javascript')) {
+            Y.one('.no_javascript').removeClass('no_javascript');
+        }
         Y.all('#semesteroverviewcontainer fieldset .togglefavorites').set('href', 'javascript: void(0);');
         var self = this;
         Y.delegate('click', function(e){self.setNewStatus(e);}, node.one('#semesteroverviewcontainer'), 'fieldset legend');

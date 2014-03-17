@@ -66,7 +66,7 @@ class block_semester_sortierung extends block_base {
         if ($this->content !== null) {
             return $this->content;
         }
-                
+
         
         $config = get_config('blocks/semester_sortierung');
         $this->config = $config;
@@ -77,7 +77,7 @@ class block_semester_sortierung extends block_base {
 
         $content = array();
         //get the information about the enrolled courses
-        $courses = enrol_get_my_courses('id, fullname, shortname, modinfo, sectioncache', 'visible DESC, fullname ASC');
+        $courses = enrol_get_my_courses('id, fullname, shortname', 'visible DESC, fullname ASC');
         
         $cid = optional_param('block_semester_sortierung_favorites', null, PARAM_ALPHANUM);
         $status = optional_param('status', null, PARAM_ALPHANUM);
