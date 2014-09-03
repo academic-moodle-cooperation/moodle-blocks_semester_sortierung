@@ -25,7 +25,6 @@
  * @copyright     2014 Academic Moodle Cooperation {@link http://www.academic-moodle-cooperation.org}
  * @license       http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
 $string['pluginname'] = 'Semester overview';
 $string['sortcourse'] = 'Sort courses by semester';
 $string['sortcoursedesc'] = 'Instance-wide on/off';
