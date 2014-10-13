@@ -28,6 +28,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2014033100;
-$plugin->requires  = 2012112900;        // Requires this Moodle version
-$plugin->component = 'block_semester_sortierung'; // Full name of the plugin (used for diagnostics)
+$plugin->version   = 2014033100;
+$plugin->release   = "2014-03-31";       // User-friendly version number
+$plugin->maturity  = MATURITY_STABLE;
+$plugin->requires  = 2014041100;      // Requires this Moodle version!
+$plugin->cron      = 0;                  // Period for cron to check this module (secs).
+$plugin->component = 'block_semester_sortierung';    // To check on upgrade, that module sits in correct place.
