@@ -71,7 +71,7 @@ class block_semester_sortierung extends block_base {
         }
 
         
-        $config = get_config('blocks/semester_sortierung');
+        $config = get_config('block_semester_sortierung');
         $this->config = $config;
 
         $this->content = new stdClass();
@@ -256,7 +256,7 @@ class block_semester_sortierung extends block_base {
         $prevyear = strval(($year - 1));
         $semester = "";
         $sortid = 3000;
-        if (strpos($this->config->wintermonths, 'mon'.$month) !== false) {
+        if (isset($this->config->wintermonths) && strpos($this->config->wintermonths, 'mon'.$month) !== false) {
             if (intval($month) <= 6) {
                 $year -= 1;
             }

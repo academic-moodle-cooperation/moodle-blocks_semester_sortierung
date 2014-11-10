@@ -53,7 +53,7 @@ if ($ADMIN->fulltree) {
         get_string('enablefavorites', 'block_semester_sortierung'), get_string('enablefavoritesdesc', 'block_semester_sortierung'), '1');
 
     foreach ($configs as $config) {
-        $config->plugin = 'blocks/semester_sortierung';
+        $config->plugin = 'block_semester_sortierung';
         $settings->add($config);
     }
 
