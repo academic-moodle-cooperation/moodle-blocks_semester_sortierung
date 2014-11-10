@@ -48,6 +48,14 @@ function xmldb_block_semester_sortierung_upgrade($oldversion, $block) {
         upgrade_block_savepoint(true, 2013010904, 'semester_sortierung');
     }
 
+    if ($oldversion < 2014033101) {
+        $settings = $DB->get_records('config_plugins', array('plugin' => 'blocks/semester_sortierung'));
+        foreach ($settings as $id => $setting) {
+            $setting->plugin = 'block_semester_sortierung';
+            $DB->update_record('config_plugins', $setting, true);
+        }
+        upgrade_block_savepoint(true, 2014033101, 'semester_sortierung');
+    }
 
     return true;
 }
