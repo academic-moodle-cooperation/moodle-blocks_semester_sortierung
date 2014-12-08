@@ -47,7 +47,7 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
         $html = '';
         
         if (is_null($config)) {
-            $config = get_config('blocks/semester_sortierung');
+            $config = get_config('block_semester_sortierung');
         }
         
         $sortedcourses_expanded = array();
