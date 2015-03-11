@@ -1,5 +1,5 @@
 <?php
-// This file is part of blocks_semester_sortierung for Moodle - http://moodle.org/
+// This file is part of block_semester_sortierung for Moodle - http://moodle.org/
 //
 // It is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,14 +15,13 @@
 // If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * block_semester_sortierung.php
- * Semester overview block ia a partial copy from the course overview block. Displays a list of all the courses,
- * sorted by semester based on course startdate. Uses ajax to update module data.
+ * Semester overview block.. partial copy from the course overview block. Displays a list of all the courses,
+ * divided by semester. Uses ajax to update data.
  *
- * @package       blocks_semester_sortierung
+ * @package       block_semester_sortierung
  * @author        Andreas Hruska (andreas.hruska@tuwien.ac.at)
  * @author        Katarzyna Potocka (katarzyna.potocka@tuwien.ac.at)
- * @author        Simeon Naydenov
+ * @author        Simeon Naydenov (moniNaydenov@gmail.com)
  * @copyright     2014 Academic Moodle Cooperation {@link http://www.academic-moodle-cooperation.org}
  * @license       http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -72,7 +71,7 @@ class block_semester_sortierung extends block_base {
         }
 
         
-        $config = get_config('blocks/semester_sortierung');
+        $config = get_config('block_semester_sortierung');
         $this->config = $config;
 
         $this->content = new stdClass();
@@ -257,7 +256,7 @@ class block_semester_sortierung extends block_base {
         $prevyear = strval(($year - 1));
         $semester = "";
         $sortid = 3000;
-        if (strpos($this->config->wintermonths, 'mon'.$month) !== false) {
+        if (isset($this->config->wintermonths) && strpos($this->config->wintermonths, 'mon'.$month) !== false) {
             if (intval($month) <= 6) {
                 $year -= 1;
             }

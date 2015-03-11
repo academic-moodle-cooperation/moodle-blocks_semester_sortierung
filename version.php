@@ -1,5 +1,5 @@
 <?php
-// This file is part of blocks_semester_sortierung for Moodle - http://moodle.org/
+// This file is part of block_semester_sortierung for Moodle - http://moodle.org/
 //
 // It is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,21 +15,22 @@
 // If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * version.php
- * Defines the version
+ * Version page
  *
- * @package       blocks_semester_sortierung
+ * @package       block_semester_sortierung
  * @author        Andreas Hruska (andreas.hruska@tuwien.ac.at)
  * @author        Katarzyna Potocka (katarzyna.potocka@tuwien.ac.at)
- * @author        Simeon Naydenov
+ * @author        Simeon Naydenov (moniNaydenov@gmail.com)
  * @copyright     2014 Academic Moodle Cooperation {@link http://www.academic-moodle-cooperation.org}
  * @license       http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2014082700;
-$plugin->release   = "2014-08-27"; 	  // User-friendly version number
+$plugin->version   = 2014120800;
+$plugin->release   = "2014-03-31";       // User-friendly version number
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->requires  = 2012112900;        // Requires this Moodle version
-$plugin->component = 'block_semester_sortierung'; // Full name of the plugin (used for diagnostics)
+$plugin->requires  = 2014041100;      // Requires this Moodle version!
+$plugin->cron      = 0;                  // Period for cron to check this module (secs).
+$plugin->component = 'block_semester_sortierung';    // To check on upgrade, that module sits in correct place.
