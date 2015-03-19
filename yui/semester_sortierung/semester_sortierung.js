@@ -170,9 +170,9 @@ M.block_semester_sortierung = M.block_semester_sortierung || {
      * Add new instance of navigation_plus tree to tree collection
      */
     init_add_semsort:function(properties) {
-        if (M.core_dock) {
+        /*if (M.core_dock) {
             M.core_dock.init(Y);
-        }
+        }*/
         new SEMSORT(properties);
     }
 };
