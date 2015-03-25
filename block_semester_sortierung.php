@@ -63,13 +63,12 @@ class block_semester_sortierung extends block_base {
      */
     public function get_content() {
         require_once(__DIR__ . '/locallib.php');
-        global $USER, $CFG;
+        global $USER, $CFG, $PAGE;
         //code copied from course_overview block, that's why $USER is used, although discouraged
         //if content already present, spare time
         if ($this->content !== null) {
             return $this->content;
         }
-
         
         $config = get_config('block_semester_sortierung');
         $this->config = $config;
@@ -150,7 +149,7 @@ class block_semester_sortierung extends block_base {
      * @return array
      */
     public function applicable_formats() {
-        return array('my-index'=>true);
+        return array('my-index'=>true, 'my' => true);
     }
 
     /**
