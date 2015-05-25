@@ -38,5 +38,7 @@ $string['addtofavorites'] = 'Add to favorites';
 $string['removefromfavorites'] = 'Remove from favorites';
 $string['enablefavorites'] = 'Show Favorites';
 $string['enablefavoritesdesc'] = 'Show a seperate section for courses chosen as favorites';
+$string['enablepersonalsort'] = 'Enable personal sort';
+$string['enablepersonalsortdesc'] = 'Enable the user to sort the courses according to his personal wish';
 $string['semester_sortierung:addinstance'] = 'Add a new Semester overview block';
 $string['semester_sortierung:myaddinstance'] = 'Add a new Semester overview block to My home';

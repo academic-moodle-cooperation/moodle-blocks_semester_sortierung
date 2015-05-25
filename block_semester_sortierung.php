@@ -77,6 +77,7 @@ class block_semester_sortierung extends block_base {
         $this->content->text = '';
         $this->content->footer = '';
 
+
         $content = array();
         //get the information about the enrolled courses
         $courses = enrol_get_my_courses('id, fullname, shortname', 'visible DESC, fullname ASC');
@@ -87,7 +88,8 @@ class block_semester_sortierung extends block_base {
         if (!empty($cid)) {
             block_semester_sortierung_toggle_fav($cid, $status);
         }
-        
+
+        block_semester_sortierung_update_personal_sort($this->config);
         
         //some moodle hacks..
         $site = get_site();
@@ -117,7 +119,8 @@ class block_semester_sortierung extends block_base {
             }
         }
         //add the semester to each course
-        $courses = $this->fill_course_semester($courses);
+        $courses = block_semester_sortierung_fill_course_semester($courses, $config);
+        $courses = block_semester_sortierung_sort_user_personal_sort($courses, $config);
 
         //more remote courses stuff, directly copied from Course overview block
         //output buffering is used here
@@ -133,6 +136,7 @@ class block_semester_sortierung extends block_base {
 
         return $this->content;
     }
+
 
     /**
      * enable the block to have a configuration page
@@ -182,53 +186,9 @@ class block_semester_sortierung extends block_base {
         if (!$this->instance_allow_multiple() && !$this->instance_allow_config()) {
             return false;
         }
+        return true;
     }
 
-    /**
-     * add the "semester" variable to each semester. The semester is calculated according to the settings and the course
-     * start date. Thus, each course MUST have a course date
-     *
-     */
-    private function fill_course_semester($courses) {
-        global $CFG;
-        require_once(__DIR__ . '/locallib.php');
-        $sortedcourses = array();
-        
-        
-        if ($favorites = get_user_preferences('semester_sortierung_favorites', '')) {
-            $favorites = array_flip(explode(',', $favorites));
-        } else {
-            $favorites = array();
-        }
-        
-        foreach ($courses as $course) {
-            $semester = $this->get_semester_from_date($course->startdate);
-            $course->semester = $semester[0];
-            $course->sortid = $semester[1];
-            if (empty($sortedcourses[$semester[1]])) {
-                $sortedcourses[$semester[1]] = array('hidden' => array(), 'visible'=>array());
-            }
-            if ($course->visible) {
-                $sortedcourses[$semester[1]]['visible'][] = $course;
-            } else {
-                $sortedcourses[$semester[1]]['hidden'][] = $course;
-            }
-            //array_push($sortedcourses[$semester[1]], $course);
-        }
-        ksort($sortedcourses);
-        $courses = array();
-        foreach ($sortedcourses as $semestercourses) {
-            usort($semestercourses['visible'], 'block_sememster_sortierung_usort');
-            usort($semestercourses['hidden'], 'block_sememster_sortierung_usort');
-            foreach ($semestercourses['visible'] as $course) {
-                $courses[$course->id] = $course;
-            }
-            foreach ($semestercourses['hidden'] as $course) {
-                $courses[$course->id] = $course;
-            }
-        }
-        return $courses;
-    }
 
     /**
      * loads the required javascript to run semsort
@@ -240,34 +200,6 @@ class block_semester_sortierung extends block_base {
         );
         $this->page->requires->yui_module(array('core_dock', 'moodle-block_semester_sortierung-semester_sortierung'),
             'M.block_semester_sortierung.init_add_semsort', array($arguments));
-    }
-
-
-    /**
-     * convert a date to a valid semester
-     *
-     * @return string
-     */
-    private function get_semester_from_date($startdate) {
-        global $CFG;
-        $month = userdate($startdate, '%m');
-        $year = intval(userdate($startdate, '%Y'));
-        $prevyear = strval(($year - 1));
-        $semester = "";
-        $sortid = 3000;
-        if (isset($this->config->wintermonths) && strpos($this->config->wintermonths, 'mon'.$month) !== false) {
-            if (intval($month) <= 6) {
-                $year -= 1;
-            }
-            $sortid -= 3;
-            $semester = get_string('wintersem', 'block_semester_sortierung') . '  ' . strval($year) .'/' . strval($year + 1);
-        } else {
-            $semester = get_string('summersem', 'block_semester_sortierung') . '  ' . $year;
-            $sortid -= 2;
-        }
-        $sortid -= $year * 10;
-        return array($semester, $sortid);
-
     }
 
 

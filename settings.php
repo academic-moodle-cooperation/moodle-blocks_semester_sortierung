@@ -52,6 +52,9 @@ if ($ADMIN->fulltree) {
     $configs[] = new admin_setting_configcheckbox('enablefavorites',
         get_string('enablefavorites', 'block_semester_sortierung'), get_string('enablefavoritesdesc', 'block_semester_sortierung'), '1');
 
+    $configs[] = new admin_setting_configcheckbox('enablepersonalsort',
+        get_string('enablepersonalsort', 'block_semester_sortierung'), get_string('enablepersonalsortdesc', 'block_semester_sortierung'), '1');
+
     foreach ($configs as $config) {
         $config->plugin = 'block_semester_sortierung';
         $settings->add($config);

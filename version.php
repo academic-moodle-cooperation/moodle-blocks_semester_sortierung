@@ -28,7 +28,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2015031900;
+$plugin->version   = 2015052500;
 $plugin->release   = "2014-03-31";       // User-friendly version number
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->requires  = 2014041100;      // Requires this Moodle version!

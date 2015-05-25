@@ -112,3 +112,27 @@
 .block_semester_sortierung .semester.empty {
     display: none;
 }
+
+.block_semester_sortierung .move-drag-start {
+    cursor: move;
+}
+
+.block_semester_sortierung fieldset.dragged {
+    opacity: 0.3;
+}
+
+
+.block_semester_sortierung fieldset.dragged {
+    /*display: none !important;*/
+}
+
+.block_semester_sortierung .blockmovetarget.drop-selected {
+    background-color: #f00
+}
+
+
+.block_semester_sortierung .blockmovetarget {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: 30px;
+}

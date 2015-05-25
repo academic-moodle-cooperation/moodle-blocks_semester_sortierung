@@ -26,7 +26,7 @@
 YUI.add('moodle-block_semester_sortierung-semester_sortierung', function(Y){
 var SEMSORT = function(config) {
     SEMSORT.superclass.constructor.apply(this, arguments);
-}
+};
 SEMSORT.prototype = {
     /**
      * semsort id(block instance id)
@@ -54,10 +54,12 @@ SEMSORT.prototype = {
         if (target.getData('fav') == '0') {
             target.one('.togglefavorites.on').removeClass('invisible');
             target.one('.togglefavorites.off').addClass('invisible');
-            target.setData('fav', '1');
+
             var newtarget = target.cloneNode(true);
-            newtarget.setData('fav', 1);
             Y.one('#semesteroverviewcontainer fieldset.fav').insert(newtarget);
+            makeCourseDraggable(newtarget, null);
+            newtarget.setAttribute('data-fav', 1);
+            newtarget.setAttribute('data-semester', 'fav');
             stat = '1';
             this.sortFavorites();
             Y.one('#semesteroverviewcontainer fieldset.fav').removeClass('empty');
@@ -71,7 +73,7 @@ SEMSORT.prototype = {
                     if (e.getData('id') == cid) {
                         e.one('.togglefavorites.off').removeClass('invisible');
                         e.one('.togglefavorites.on').addClass('invisible');
-                        e.setData('fav', '0');
+                        e.setAttribute('data-fav', '0');
                     }
                 });
             var favcount = Y.one('#semesteroverviewcontainer fieldset.fav').all('fieldset.course')._nodes.length;
@@ -147,7 +149,136 @@ SEMSORT.prototype = {
                 }
             });
     }
-}
+};
+
+
+
+var makeCourseDraggable = function(v, k) {
+    var imagenode = v.one('legend img.move-drag-start');
+    var nojslink = v.one('legend a.move-static');
+    imagenode.removeClass('hidden');
+    if (nojslink != null) {
+        nojslink.remove();
+    }
+
+    var dd = new Y.DD.Drag({
+        node: v,
+        target: {
+            padding: '0 0 0 20'
+        }
+    }).plug(Y.Plugin.DDProxy, {
+            moveOnEnd: false
+        }).plug(Y.Plugin.DDConstrained, {
+            constrain2node: '#semesteroverviewcontainer',
+            stickY: true
+        });
+    dd.addHandle('legend img.move-drag-start');
+};
+
+
+
+
+
+
+
+//Static Vars
+var goingUp = false, lastY = 0;
+
+var list = Y.Node.all('#semesteroverviewcontainer .course');
+list.each(makeCourseDraggable);
+
+Y.DD.DDM.on('drag:start', function(e) {
+    //Get our drag object
+    var drag = e.target;
+    //Set some styles here
+    var html = '<div class="semester expanded">' + drag.get('node').get('outerHTML') + '</div>';
+
+    drag.get('node').setStyle('opacity', '.25');
+    drag.get('dragNode').addClass('block_semester_sortierung');
+    drag.get('dragNode').set('innerHTML', html);
+    drag.get('dragNode').setStyles({
+        opacity: '.5',
+        borderColor: drag.get('node').getStyle('borderColor'),
+        backgroundColor: drag.get('node').getStyle('backgroundColor')
+    });
+});
+
+Y.DD.DDM.on('drag:end', function(e) {
+    var drag = e.target;
+    //Put our styles back
+    drag.get('node').setStyles({
+        visibility: '',
+        opacity: '1'
+    });
+
+     var params = {
+     "block_semester_sortierung_move_course": drag.get('node').getData('id'),
+     "block_semester_sortierung_move_target": drag.get('node').ancestor('.semester').all('.course').indexOf(drag.get('node')),
+     "block_semester_sortierung_move_semester": drag.get('node').getData('semester')
+     };
+
+     Y.io(M.cfg.wwwroot+'/blocks/semester_sortierung/ajax_personalsort.php', {
+     method:'GET',
+     data:  build_querystring(params),
+     context:this
+     });
+
+
+});
+
+Y.DD.DDM.on('drag:drag', function(e) {
+    //Get the last y point
+    var y = e.target.lastXY[1];
+    //is it greater than the lastY var?
+    goingUp = (y < lastY);  //We are going up or down
+    //Cache for next check
+    lastY = y;
+});
+
+Y.DD.DDM.on('drop:over', function(e) {
+    //Get a reference to our drag and drop nodes
+    var drag = e.drag.get('node'),
+        drop = e.drop.get('node');
+    var dragSemester = drag.getData("semester");
+    var dropSemester = drop.getData("semester");
+    //Are we dropping on a li node?
+    if (drop.hasClass('course') && dropSemester==dragSemester) {
+        //Are we not going up?
+        if (!goingUp) {
+            drop = drop.get('nextSibling');
+        }
+        //Add the node to this list
+        e.drop.get('node').get('parentNode').insertBefore(drag, drop);
+        //Resize this nodes shim, so we can drop on it later.
+        e.drop.sizeShim();
+    }
+});
+/*
+Y.DD.DDM.on('drag:drophit', function(e) {
+    var drop = e.drop.get('node'),
+        drag = e.drag.get('node');
+
+    //if we are not on an li, we must have been dropped on a ul
+    if (!drop.hasClass('coursebox')) {
+        if (!drop.contains(drag)) {
+            drop.appendChild(drag);
+        }
+    }
+});
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
 // The tree extends the YUI base foundation.
 Y.extend(SEMSORT, Y.Base, SEMSORT.prototype, {
     NAME : 'semester_sortierung-semsort',
@@ -157,6 +288,8 @@ Y.extend(SEMSORT, Y.Base, SEMSORT.prototype, {
         }
     }
 });
+
+
 
 /**
  * This namespace will contain all of the contents of the navigation_plus blocks
@@ -177,4 +310,4 @@ M.block_semester_sortierung = M.block_semester_sortierung || {
     }
 };
 
-}, '@VERSION@', {requires:['base', 'core_dock', 'io-base', 'node', 'node-base','dom', 'event-custom', 'event-delegate', 'json-parse']});
+}, '@VERSION@', {requires:['base', 'core_dock', 'io-base', 'node', 'node-base','dom', 'event-custom', 'event-delegate', 'json-parse', 'dd-constrain', 'dd-proxy', 'dd-drop', 'dd-plugin']});
