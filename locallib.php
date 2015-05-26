@@ -1,18 +1,18 @@
 <?php
 // This file is part of block_semester_sortierung for Moodle - http://moodle.org/
 //
-// It is free software: you can redistribute it and/or modify
+// Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// It is distributed in the hope that it will be useful,
+// Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Local functions
@@ -32,7 +32,7 @@ function block_sememster_sortierung_usort($a, $b) {
 }
 
 function block_semester_sortierung_toggle_fav($courseid, $status) {
-    
+
     if ($favorites = get_user_preferences('semester_sortierung_favorites', '')) {
         $favorites = explode(',', $favorites);
         $favorites = array_flip($favorites);
@@ -54,13 +54,13 @@ function block_semester_sortierung_toggle_fav($courseid, $status) {
 
 function block_semester_sortierung_update_personal_sort($config = null) {
 
-    //geet all possible parameters
-    $move_course = optional_param('block_semester_sortierung_move_course', 0, PARAM_INT);
-    $move_course_semester = optional_param('block_semester_sortierung_move_semester', '', PARAM_ALPHANUM);
-    $move_course_target = optional_param('block_semester_sortierung_move_target', -1, PARAM_INT);
+    // Get all possible parameters.
+    $movecourse = optional_param('block_semester_sortierung_move_course', 0, PARAM_INT);
+    $movecoursesemester = optional_param('block_semester_sortierung_move_semester', '', PARAM_ALPHANUM);
+    $movecoursetarget = optional_param('block_semester_sortierung_move_target', -1, PARAM_INT);
 
-    if ($move_course <= 0 || $move_course_semester == '' || $move_course_target < 0) {
-        return ; //not needed
+    if ($movecourse <= 0 || $movecoursesemester == '' || $movecoursetarget < 0) {
+        return; // Not needed.
     }
 
     if (is_null($config)) {
@@ -68,52 +68,51 @@ function block_semester_sortierung_update_personal_sort($config = null) {
     }
 
     if ((isset($config->enablepersonalsort) && $config->enablepersonalsort == '1') == false) {
-        return ; //personal sorting disabled
+        return; // Personal sorting disabled.
     }
 
     $courses = enrol_get_my_courses('id, fullname, shortname', 'visible DESC, fullname ASC');
 
-    if (!isset($courses[$move_course])) {
-        return ; //invalid course id
+    if (!isset($courses[$movecourse])) {
+        return; // Invalid course id.
     }
-    $context = context_course::instance($courses[$move_course]->id);
+    $context = context_course::instance($courses[$movecourse]->id);
 
     if (is_enrolled($context) != true) {
-        return ; //invalid course id
+        return; // Invalid course id.
     }
 
-    $courses = block_semester_sortierung_fill_course_semester($courses, $config, $move_course_semester);
+    $courses = block_semester_sortierung_fill_course_semester($courses, $config, $movecoursesemester);
     $courses = block_semester_sortierung_sort_user_personal_sort($courses, $config, true);
 
     $userpref = get_user_preferences('semester_sortierung_sorting', '[]');
     $userpref = json_decode($userpref, true);
 
-    if (!isset($userpref[$move_course_semester])) {
-        return ; //invalid semester
+    if (!isset($userpref[$movecoursesemester])) {
+        return; // Invalid semester.
     }
 
-    $usersort = $userpref[$move_course_semester];
+    $usersort = $userpref[$movecoursesemester];
 
-    if (!in_array($move_course, $usersort)) {
-        return; //invalid course/semester combination
+    if (!in_array($movecourse, $usersort)) {
+        return; // Invalid course/semester combination.
     }
 
-    if (($key = array_search($move_course, $usersort)) !== false) {
-        unset($usersort[$key]); //remove the course from the list
+    if (($key = array_search($movecourse, $usersort)) !== false) {
+        unset($usersort[$key]); // Remove the course from the list.
     }
 
-    if ($move_course_target >= count($userpref[$move_course_semester])) {
-        $move_course_target = count($userpref[$move_course_semester]) - 1; //prevent invalid input
+    if ($movecoursetarget >= count($userpref[$movecoursesemester])) {
+        $movecoursetarget = count($userpref[$movecoursesemester]) - 1; // Prevent invalid input.
     }
 
-    array_splice($usersort, $move_course_target, 0, $move_course); //add the course at the new index
+    array_splice($usersort, $movecoursetarget, 0, $movecourse); // Add the course at the new index.
 
-    $userpref[$move_course_semester] = array_values($usersort); //clear out indexes
+    $userpref[$movecoursesemester] = array_values($usersort); // Clear out indexes.
 
-    set_user_preference('semester_sortierung_sorting', json_encode($userpref)); //save setting
+    set_user_preference('semester_sortierung_sorting', json_encode($userpref)); // Save setting.
 
 }
-
 
 /**
  * add the "semester" variable to each semester. The semester is calculated according to the settings and the course
@@ -127,27 +126,23 @@ function block_semester_sortierung_fill_course_semester($courses, $config, $chos
     $favorites = array();
 
     if ($showfavorites) {
-        //favorites are not enabled, nothing to do here
+        // Favorites are not enabled, nothing to do here.
         if ($favorites = get_user_preferences('semester_sortierung_favorites', '')) {
             $favorites = array_flip(explode(',', $favorites));
         }
         $sortedcourses['fav'] = array(
-            'visible'=>array(),
+            'visible' => array(),
             'hidden' => array(),
             'title' => get_string('favorites', 'block_semester_sortierung')
         );
     }
-
-
-
-
 
     foreach ($courses as $course) {
         $semester = block_semester_sortierung_get_semester($config, $course->startdate);
         $course->semester_short = $semester->semester_short;
         if (empty($sortedcourses[$course->semester_short])) {
             $sortedcourses[$course->semester_short] = array(
-                'visible'=>array(),
+                'visible' => array(),
                 'hidden' => array(),
                 'title' => $semester->semester
             );
@@ -163,7 +158,7 @@ function block_semester_sortierung_fill_course_semester($courses, $config, $chos
     }
     krsort($sortedcourses);
     foreach ($sortedcourses as $semester => $groups) {
-        //used to spare some some work after that when only changing personal sorting
+        // Esed to spare some some work after that when only changing personal sorting.
         if (!is_null($chosensemester) && $semester != $chosensemester) {
             unset($sortedcourses[$semester]);
             continue;
@@ -177,58 +172,54 @@ function block_semester_sortierung_fill_course_semester($courses, $config, $chos
     return $sortedcourses;
 }
 
-
-
 function block_semester_sortierung_sort_user_personal_sort($sortedcourses, $config, $forcecreate = false) {
 
     if ((isset($config->enablepersonalsort) && $config->enablepersonalsort == '1') == false) {
-        //nothing to do
+        // Nothing to do.
         return $sortedcourses;
     }
 
     $userpref = get_user_preferences('semester_sortierung_sorting', '[]');
 
-
     $userpref = json_decode($userpref, true);
 
-    $userprefchanged = false; //used to spare some db updates
-    //go through all semesters
+    $userprefchanged = false; // Used to spare some db updates.
+    // Go through all semesters.
     foreach ($sortedcourses as $semester => $semesterinfo) {
         if ($forcecreate && !isset($userpref[$semester])) {
             $userpref[$semester] = array();
         }
-        //check if existing in the user preference; if not, don't do anything and keep the current sort
+        // Check if existing in the user preference; if not, don't do anything and keep the current sort.
         if (isset($userpref[$semester])) {
             $usersorted = array();
-            $sempref = $userpref[$semester]; //short for $usersorted[$semester]
-            $courses = $semesterinfo['courses']; //short for $semesterinfo['courses']
-            //go through all courses in the preference and add them to the new sorted list in the desired order
+            $sempref = $userpref[$semester]; // Short for $usersorted[$semester].
+            $courses = $semesterinfo['courses']; // Short for $semesterinfo['courses'].
+            // Go through all courses in the preference and add them to the new sorted list in the desired order.
             foreach ($sempref as $i => $sortedid) {
-                //check whether course exists in user courses
+                // Check whether course exists in user courses.
                 if (isset($courses[$sortedid])) {
                     $usersorted[$sortedid] = $courses[$sortedid];
                     unset($courses[$sortedid]);
                 } else {
-                    //remove non-existent courses
+                    // Remove non-existent courses.
                     $userprefchanged = true;
                     unset($sempref[$i]);
                 }
             }
 
-            //checks if any unsorted courses are left; if that is the case, add them to the sorted list in the
-            //default order
+            // Checks if any unsorted courses are left; if that is the case, add them to the sorted list in the
+            // Default order.
             foreach ($courses as $id => $course) {
                 $userprefchanged = true;
                 $usersorted[$id] = $course;
                 $sempref[] = $id;
             }
 
-
-            $userpref[$semester] = array_values($sempref); //extract the values only => shortens the json
-            $sortedcourses[$semester]['courses'] = $usersorted; //replaces old sorted courses with user sorted courses
+            $userpref[$semester] = array_values($sempref); // Extract the values only => shortens the json.
+            $sortedcourses[$semester]['courses'] = $usersorted; // Replaces old sorted courses with user sorted courses.
         }
     }
-    //in case theere was a change, update the db
+    // In case there was a change, update the db.
     if ($userprefchanged) {
         set_user_preference('semester_sortierung_sorting', json_encode($userpref));
     }
@@ -237,13 +228,12 @@ function block_semester_sortierung_sort_user_personal_sort($sortedcourses, $conf
 
 }
 
-
 /**
  * convert a date to a valid semester
  *
  * @return string
  */
- function block_semester_sortierung_get_semester($config, $timestamp) {
+function block_semester_sortierung_get_semester($config, $timestamp) {
     global $CFG;
     $month = userdate($timestamp, '%m');
     $year = userdate($timestamp, '%Y');

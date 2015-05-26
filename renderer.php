@@ -1,18 +1,18 @@
 <?php
 // This file is part of block_semester_sortierung for Moodle - http://moodle.org/
 //
-// It is free software: you can redistribute it and/or modify
+// Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// It is distributed in the hope that it will be useful,
+// Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Render class
@@ -25,7 +25,6 @@
  * @license       http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
 defined('MOODLE_INTERNAL') || die;
 
 /**
@@ -36,34 +35,34 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
 
     /**
      * Constructs a string with all courses' short description, including remote_courses. remote_courses are not implemented though
-     * 
+     *
      * @param sortedcourses - array of the sorted courses
-     * @param $remote_courses - array of the remote courses
+     * @param $remotecourses - array of the remote courses
      * @return string html to be displayed in course_overview block
      */
-    public function semester_sortierung($sortedcourses, array $remote_courses=array(), $config = null) {
+    public function semester_sortierung($sortedcourses, array $remotecourses=array(), $config = null) {
         global $CFG, $DB;
-        
+
         $html = '';
 
-        $move_course = optional_param('block_semester_sortierung_move_course', 0, PARAM_INT);
-        $move_course_semester = optional_param('block_semester_sortierung_move_semester', '', PARAM_ALPHANUM);
-        $move_course_target = optional_param('block_semester_sortierung_move_target', -1, PARAM_INT);
-        
+        $movecourse = optional_param('block_semester_sortierung_move_course', 0, PARAM_INT);
+        $movecoursesemester = optional_param('block_semester_sortierung_move_semester', '', PARAM_ALPHANUM);
+        $movecoursetarget = optional_param('block_semester_sortierung_move_target', -1, PARAM_INT);
+
         if (is_null($config)) {
             $config = get_config('block_semester_sortierung');
         }
 
-        if ($semesters_expanded = get_user_preferences('semester_sortierung_semesters', '')) {
-            $semesters_expanded = array_flip(explode(',', $semesters_expanded));
+        if ($semestersexpanded = get_user_preferences('semester_sortierung_semesters', '')) {
+            $semestersexpanded = array_flip(explode(',', $semestersexpanded));
         } else {
-            $semesters_expanded = array();
+            $semestersexpanded = array();
         }
 
-        if ($courses_expanded = get_user_preferences('semester_sortierung_courses', '')) {
-            $courses_expanded = array_flip(explode(',', $courses_expanded));
+        if ($coursesexpanded = get_user_preferences('semester_sortierung_courses', '')) {
+            $coursesexpanded = array_flip(explode(',', $coursesexpanded));
         } else {
-            $courses_expanded = array();
+            $coursesexpanded = array();
         }
 
         if ($favorites = get_user_preferences('semester_sortierung_favorites', '')) {
@@ -72,37 +71,38 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
             $favorites = array();
         }
 
-        //whether the courses should be sorted
+        // Whether the courses should be sorted.
         $sorted = (isset($config->sortcourses) && $config->sortcourses == '1');
-        
+
         $showfavorites = (isset($config->enablefavorites) && $config->enablefavorites == '1');
         $personalsort = (isset($config->enablepersonalsort) && $config->enablepersonalsort == '1') && $sorted;
-        $userediting = $personalsort && $this->page->user_is_editing(); //prevent personal sort when not enabled in the setting
+        // Prevent personal sort when not enabled in the setting.
+        $userediting = $personalsort && $this->page->user_is_editing();
 
         $content = '';
         $first = true;
 
-        $sortedcourses_expanded = array();
+        $sortedcoursesexpanded = array();
 
-        //create an array with expanded courses to be filled up with info
+        // Create an array with expanded courses to be filled up with info.
         foreach ($sortedcourses as $semester => $semesterinfo) {
             foreach ($semesterinfo['courses'] as $id => $courseinfo) {
-                if (isset($courses_expanded[strval($courseinfo->id)])) {
-                    $sortedcourses_expanded[$courseinfo->id] = $courseinfo;
+                if (isset($coursesexpanded[strval($courseinfo->id)])) {
+                    $sortedcoursesexpanded[$courseinfo->id] = $courseinfo;
                 }
             }
         }
 
-        //fill in expanded courses with course info
+        // Fill in expanded courses with course info.
         $htmlarray = array();
-        // get all modules as objects
+        // Get all modules as objects.
         if ($modules = $DB->get_records('modules')) {
             foreach ($modules as $mod) {
                 if (file_exists($CFG->dirroot.'/mod/'.$mod->name.'/lib.php')) {
                     include_once($CFG->dirroot.'/mod/'.$mod->name.'/lib.php');
                     $fname = $mod->name.'_print_overview';
                     if (function_exists($fname)) {
-                        $fname($sortedcourses_expanded, $htmlarray);
+                        $fname($sortedcoursesexpanded, $htmlarray);
                     }
                 }
             }
@@ -112,66 +112,73 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
             $isfavorites = $semester == 'fav';
 
             $printmovetargets = $userediting &&
-                $move_course_semester == $semester &&
-                $move_course_target < 0 &&
-                isset($semesterinfo['courses'][$move_course]);
-
+                $movecoursesemester == $semester &&
+                $movecoursetarget < 0 &&
+                isset($semesterinfo['courses'][$movecourse]);
 
             if ($sorted || $isfavorites) {
                 $empty = false;
                 if ($isfavorites) {
                     $empty = count($semesterinfo['courses']) <= 0;
                 }
-                //all courses are divided by semester into openable divs
-                //opens a new semester box
-                $content .= $this->start_semester($semester, $semesterinfo['title'], $semesters_expanded, $first, $empty);
+                // All courses are divided by semester into openable divs
+                // opens a new semester box.
+                $content .= $this->start_semester($semester,
+                    $semesterinfo['title'],
+                    $semestersexpanded,
+                    $first,
+                    $empty);
             } else if ($first) {
-                //when not sorted, only one div is opened
+                // When not sorted, only one div is opened.
                 $content .= html_writer::start_tag('div', array( 'class' => 'semestersortierung nosemester semester'));
             }
 
             $first = $isfavorites;
-
 
             $moveindex = 0;
             foreach ($semesterinfo['courses'] as $id => $course) {
                 $courseid = strval($course->id);
 
                 if ($printmovetargets) {
-                    if ($move_course == $id) {
+                    if ($movecourse == $id) {
                         continue;
                     } else {
-                        $content .= $this->get_move_target($move_course, $moveindex, $semester);
+                        $content .= $this->get_move_target($movecourse, $moveindex, $semester);
                     }
                 }
-                $content .= $this->course_html($course, $htmlarray, isset($courses_expanded[$courseid]), isset($favorites[$courseid]), $showfavorites, $userediting);
+                $content .= $this->course_html($course,
+                    $htmlarray,
+                    isset($coursesexpanded[$courseid]),
+                    isset($favorites[$courseid]),
+                    $showfavorites,
+                    $userediting);
                 $moveindex++;
             }
 
             if ($printmovetargets) {
-                $content .= $this->get_move_target($move_course, $moveindex, $semester);
+                $content .= $this->get_move_target($movecourse, $moveindex, $semester);
             }
 
             if ($sorted || $isfavorites) {
-                // close the semester box
+                // Close the semester box.
                 $content .= $this->end_semester();
             }
         }
 
-        //closes the last semester box if the courses are not sorted
+        // Closes the last semester box if the courses are not sorted.
         if (!$sorted) {
             $content .= html_writer::end_tag('div');
         }
 
-        $html .= html_writer::nonempty_tag('div', $content, array('id' => 'semesteroverviewcontainer', 'class' => 'no_javascript'));
-        
-        
+        $html .= html_writer::nonempty_tag('div', $content, array(
+            'id' => 'semesteroverviewcontainer',
+            'class' => 'no_javascript'));
 
-        //prints remote courses.. standard behavior like in course overview block
-        if (!empty($remote_courses)) {
+        // Prints remote courses.. standard behavior like in course overview block.
+        if (!empty($remotecourses)) {
             $html .= $this->output->heading(get_string('remotecourses', 'mnet'));
         }
-        foreach ($remote_courses as $course) {
+        foreach ($remotecourses as $course) {
             $html .= $this->output->box_start('coursebox');
             $attributes = array('title' => s($course->fullname));
             $html .= $this->output->heading(html_writer::link(
@@ -185,18 +192,20 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
         return $html;
     }
 
-    private function start_semester($semestercode, $semestertitle, $expanded_semesters, $first, $empty) {
+    private function start_semester($semestercode, $semestertitle, $expandedsemesters, $first, $empty) {
         $html = '';
 
         $classes = array('semester');
         if ($empty) {
             $classes[] = 'empty';
         }
-        if (($first && count($expanded_semesters) == 0) || isset($expanded_semesters[$semestercode])) {
+        if (($first && count($expandedsemesters) == 0) || isset($expandedsemesters[$semestercode])) {
             $classes[] = 'expanded';
         }
         $classes[] = $semestercode;
-        $html .= html_writer::start_tag('fieldset', array('class' => implode(' ', $classes), 'data-id' => $semestercode));
+        $html .= html_writer::start_tag('fieldset', array(
+            'class' => implode(' ', $classes),
+            'data-id' => $semestercode));
         $html .= html_writer::start_tag('legend');
         $html .= $this->get_expand_image_button_html();
 
@@ -205,19 +214,19 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
         $html .= html_writer::start_tag('div', array('class' => 'expandablebox'));
         return $html;
     }
-    
+
     private function end_semester() {
         $html = '';
         $html .= html_writer::end_tag('div');
         $html .= html_writer::end_tag('fieldset');
         return $html;
     }
-    
+
     private function course_html($course, $htmlarray, $courseexpanded, $isfav, $showfavorites, $userediting) {
-        //prints course as in standard course overview block
+        // Prints course as in standard course overview block.
         $html = '';
         $classes = array('course');
-        
+
         $attributes = array('title' => s($course->fullname));
         $attributes['class'] = 'courselink';
         if ($courseexpanded) {
@@ -241,8 +250,6 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
         if ($userediting) {
             $html .= $this->get_personalsort_icons($course->id, $course->semester_short);
         }
-
-
 
         $html .= '&nbsp;'. html_writer::link(new moodle_url('/course/view.php', array('id' => $course->id)),
             trim(format_string($course->fullname)), $attributes) . '&nbsp;';
@@ -270,7 +277,7 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
     }
 
     private function get_personalsort_icons($courseid, $semester) {
-        $html = html_writer::start_tag('a', array( //no-js icon
+        $html = html_writer::start_tag('a', array( // No-js icon.
             'href' => new moodle_url($this->page->url, array(
                 'block_semester_sortierung_move_course' => $courseid,
                 'block_semester_sortierung_move_semester' => $semester)),
@@ -284,19 +291,18 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
 
         $html .= html_writer::empty_tag('img', array(
             'src' => $this->output->pix_url('i/dragdrop'),
-            'class' => 'iconsmall move-drag-start hidden',
-            //'draggable' => 'true'
+            'class' => 'iconsmall move-drag-start hidden'
         ));
 
         return $html;
     }
-    
+
     private function get_favorites_icon($courseid, $addorrem, $isfav) {
         $content = html_writer::start_tag('a', array(
-            'href' => new moodle_url($this->page->url, array('block_semester_sortierung_favorites' => $courseid, 'status' => ($addorrem ? '0' : '1'))),
+            'href' => new moodle_url($this->page->url, array(
+                'block_semester_sortierung_favorites' => $courseid,
+                'status' => ($addorrem ? '0' : '1'))),
             'class' => 'togglefavorites ' . ($addorrem ? 'on' : 'off') . ($isfav ? '' : ' invisible'),
-         /*   'title' => get_string($addorrem ? 'removefromfavorites' : 'addtofavorites', 'block_semester_sortierung'),
-            'alt' => get_string($addorrem ? 'removefromfavorites' : 'addtofavorites', 'block_semester_sortierung'),*/
             'data-fav' => strval($addorrem)));
         $content .= html_writer::empty_tag('img', array(
             'src' => $this->output->pix_url($addorrem ? 'fav_on' : 'fav_off', 'block_semester_sortierung'),

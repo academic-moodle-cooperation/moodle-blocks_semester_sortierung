@@ -156,23 +156,25 @@ SEMSORT.prototype = {
 var makeCourseDraggable = function(v, k) {
     var imagenode = v.one('legend img.move-drag-start');
     var nojslink = v.one('legend a.move-static');
-    imagenode.removeClass('hidden');
-    if (nojslink != null) {
-        nojslink.remove();
-    }
-
-    var dd = new Y.DD.Drag({
-        node: v,
-        target: {
-            padding: '0 0 0 20'
+    if (imagenode) {
+        imagenode.removeClass('hidden');
+        if (nojslink != null) {
+            nojslink.remove();
         }
-    }).plug(Y.Plugin.DDProxy, {
-            moveOnEnd: false
-        }).plug(Y.Plugin.DDConstrained, {
-            constrain2node: '#semesteroverviewcontainer',
-            stickY: true
-        });
-    dd.addHandle('legend img.move-drag-start');
+
+        var dd = new Y.DD.Drag({
+            node: v,
+            target: {
+                padding: '0 0 0 20'
+            }
+        }).plug(Y.Plugin.DDProxy, {
+                moveOnEnd: false
+            }).plug(Y.Plugin.DDConstrained, {
+                constrain2node: '#semesteroverviewcontainer',
+                stickY: true
+            });
+        dd.addHandle('legend img.move-drag-start');
+    }
 };
 
 
