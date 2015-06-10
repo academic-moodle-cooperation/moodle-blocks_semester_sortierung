@@ -245,11 +245,12 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
             'data-semester' => $course->semester_short,
             'data-fav' => ($isfav ? '1' : '0')));
         $html .= html_writer::start_tag('legend');
-        $html .= $this->get_expand_image_button_html();
 
         if ($userediting) {
             $html .= $this->get_personalsort_icons($course->id, $course->semester_short);
         }
+
+        $html .= $this->get_expand_image_button_html();
 
         $html .= '&nbsp;'. html_writer::link(new moodle_url('/course/view.php', array('id' => $course->id)),
             trim(format_string($course->fullname)), $attributes) . '&nbsp;';
@@ -277,7 +278,11 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
     }
 
     private function get_personalsort_icons($courseid, $semester) {
-        $html = html_writer::start_tag('a', array( // No-js icon.
+        $html = html_writer::empty_tag('img', array(
+            'src' => $this->output->pix_url('i/dragdrop'),
+            'class' => 'iconsmall move-drag-start hidden'
+        ));
+        $html .= html_writer::start_tag('a', array( // No-js icon.
             'href' => new moodle_url($this->page->url, array(
                 'block_semester_sortierung_move_course' => $courseid,
                 'block_semester_sortierung_move_semester' => $semester)),
@@ -289,10 +294,6 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
         ));
         $html .= html_writer::end_tag('a');
 
-        $html .= html_writer::empty_tag('img', array(
-            'src' => $this->output->pix_url('i/dragdrop'),
-            'class' => 'iconsmall move-drag-start hidden'
-        ));
 
         return $html;
     }
