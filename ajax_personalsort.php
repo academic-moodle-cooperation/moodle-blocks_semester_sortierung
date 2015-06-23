@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version page
+ * This file updates the user_preference for the personal sorting of courses
  *
  * @package       block_semester_sortierung
  * @author        Andreas Hruska (andreas.hruska@tuwien.ac.at)
@@ -25,12 +25,11 @@
  * @license       http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+define('AJAX_SCRIPT', true);
 
-defined('MOODLE_INTERNAL') || die();
+require_once('../../config.php');
+require_once(__DIR__ . '/locallib.php');
 
-$plugin->version   = 2015052600;
-$plugin->release   = "2014-03-31";       // User-friendly version number.
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->requires  = 2014041100;      // Requires this Moodle version!
-$plugin->cron      = 0;                  // Period for cron to check this module (secs).
-$plugin->component = 'block_semester_sortierung';    // To check on upgrade, that module sits in correct place.
+require_login();
+
+block_semester_sortierung_update_personal_sort();

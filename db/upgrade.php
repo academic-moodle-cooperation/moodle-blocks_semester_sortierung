@@ -1,18 +1,18 @@
 <?php
 // This file is part of block_semester_sortierung for Moodle - http://moodle.org/
 //
-// It is free software: you can redistribute it and/or modify
+// Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// It is distributed in the hope that it will be useful,
+// Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Upgrade script
@@ -40,7 +40,10 @@ function xmldb_block_semester_sortierung_upgrade($oldversion, $block) {
         foreach ($settings as $id => $settingobj) {
             $dataobject->name = substr($settingobj->name, 20);
             $dataobject->value = $settingobj->value;
-            if (!$DB->record_exists('config_plugins', array('plugin'=>'blocks/semester_sortierung', 'name' => $dataobject->name))) {
+            if (!$DB->record_exists('config_plugins', array(
+                'plugin' => 'blocks/semester_sortierung',
+                'name' => $dataobject->name
+            ))) {
                 $DB->insert_record('config_plugins', $dataobject);
                 $DB->delete_records('config', array('name' => $settingobj->name));
             }

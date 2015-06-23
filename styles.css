@@ -51,7 +51,7 @@
     overflow: visible !important;
 }
 
-.block_semester_sortierung legend > .imgbox {    
+.block_semester_sortierung legend > .imgbox {
     background-image: url([[pix:t/switch_plus]]);
     background-repeat: no-repeat;
     background-position: 0px -2px;
@@ -77,7 +77,7 @@
 }
 
 .block_semester_sortierung fieldset fieldset {
-    border: 1px solid #DDD; 
+    border: 1px solid #DDD;
     padding-left: 5px;
     margin-left: 5px;
 }
@@ -111,4 +111,28 @@
 
 .block_semester_sortierung .semester.empty {
     display: none;
+}
+
+.block_semester_sortierung .move-drag-start {
+    cursor: move;
+}
+
+.block_semester_sortierung fieldset.dragged {
+    opacity: 0.3;
+}
+
+
+.block_semester_sortierung fieldset.dragged {
+    /*display: none !important;*/
+}
+
+.block_semester_sortierung .blockmovetarget.drop-selected {
+    background-color: #f00
+}
+
+
+.block_semester_sortierung .blockmovetarget {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: 30px;
 }
