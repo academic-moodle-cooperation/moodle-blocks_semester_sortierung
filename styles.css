@@ -94,15 +94,73 @@
     display: none;
 }
 
+
+
+/* bigger fix here */
+
+
+.block_semester_sortierung .course > legend {
+    padding-right: 0px;
+}
+
+.block_semester_sortierung .coursebox {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+
+
+.block_semester_sortierung fieldset.course {
+    min-height: 30px;
+}
+
+.block_semester_sortierung .no_javascript .semester .favoriteicon, .block_semester_sortierung .semester.nosemester .favoriteicon, .block_semester_sortierung .semester.expanded .favoriteicon {
+    position: relative;
+    top: 0px;
+    right: 0px;
+    margin-top: 0px;
+}
+
+.block_semester_sortierung fieldset {
+    position: relative;
+}
+
+.block_semester_sortierung legend {
+    border: 0px;
+    width: auto !important;
+    max-width: 100%;
+    padding-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    line-height: 19px;
+}
+
+
+
+/* end of bigger fix */
+
 .block_semester_sortierung .no_javascript .semester .favoriteicon,
 .block_semester_sortierung .semester.nosemester .favoriteicon,
 .block_semester_sortierung .semester.expanded .favoriteicon{
     height: 16px;
     width: 17px;
-    right: 32px;
-    margin-top: -12px;
+    right: 0px;
+    /*margin-top: -12px;*/
     position: absolute;
     display: block !important;
+}
+
+
+.togglefavorites {
+    position: absolute;
+    right: 10px;
+    margin-top: -12px;
+}
+
+/* one line fix :) */
+
+.block_semester_sortierung .content {
+    position: relative;
 }
 
 .block_semester_sortierung .coursebox div.info {
