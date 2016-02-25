@@ -61,6 +61,7 @@ SEMSORT.prototype = {
             newtarget.setAttribute('data-fav', 1);
             newtarget.setAttribute('data-semester', 'fav');
             stat = '1';
+            target.setAttribute('data-fav', 1);
             this.sortFavorites();
             Y.one('#semesteroverviewcontainer fieldset.fav').removeClass('empty');
         } else {
