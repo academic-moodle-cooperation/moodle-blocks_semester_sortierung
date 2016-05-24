@@ -46,12 +46,21 @@ $functions = array(
         'type' => 'read',
         'capabilities' => ''
     ),
+
+    'block_semester_sortierung_get_coursedetails' => array(
+        'classname' => 'block_semester_sortierung_external',
+        'methodname' => 'get_coursedetails',
+        'classpath' => 'blocks/semester_sortierung/externallib.php',
+        'description' => 'Returns a list of course items for a course',
+        'type' => 'read',
+        'capabilities' => ''
+    ),
 );
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
 $services = array(
     'TUWienApp' => array(
-        'functions' => array ('block_semester_sortierung_get_modules', 'block_semester_sortierung_get_courses'),
+        'functions' => array ('block_semester_sortierung_get_modules', 'block_semester_sortierung_get_courses', 'block_semester_sortierung_get_coursedetails' ),
         'restrictedusers' => 1,
         'enabled'=>1,
     )

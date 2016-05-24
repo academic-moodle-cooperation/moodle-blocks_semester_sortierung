@@ -87,14 +87,14 @@ class block_semester_sortierung_external extends external_api {
     }
 
     /**
-     * Describes the parameters for get_modules.
+     * Describes the parameters for get_courses.
      *
      * @return external_function_parameters
      * @since Moodle 3.0
      */
     public static function get_courses_parameters() {
         return new external_function_parameters (
-            array('userid' => new external_value(PARAM_INT, 'user id', VALUE_REQUIRED))
+            array('userid' => new external_value(PARAM_TEXT, 'user id', VALUE_REQUIRED))
         );
     }
 
@@ -108,12 +108,13 @@ class block_semester_sortierung_external extends external_api {
         global $CFG, $DB, $OUTPUT;
         require_once(__DIR__ . '/locallib.php');
 
+        $user = $DB->get_record('user', array('username' => $userid));
+
         // Get the information about the enrolled courses.
-        $courses = enrol_get_all_users_courses($userid, false , 'id, fullname, shortname, idnumber, summary');
+        $courses = enrol_get_all_users_courses($user->id, false , 'id, fullname, shortname, idnumber, summary');
         $config = get_config('block_semester_sortierung');
         // Add the semester to each course.
         $courses = block_semester_sortierung_fill_course_semester($courses, $config);
-
 
         $result = array();
         foreach ($courses as $semester => $seminfo) {
@@ -122,19 +123,18 @@ class block_semester_sortierung_external extends external_api {
             }
             foreach ($seminfo['courses'] as $semcourse) {
                 $course = new stdClass;
-            //    $course->id = $semcourse->idnumber;
+                $course->coursenumber = $semcourse->idnumber;
                 $course->coursename = $semcourse->fullname;
                 $course->description = $semcourse->summary;
                 $course->semestercode = $semcourse->semester_short;
                 $result[] = $course;
             }
         }
-
         return $result;
     }
 
     /**
-     * Describes the get_modules return value.
+     * Describes the get_courses return value.
      *
      * @return external_single_structure
      * @since Moodle 2.5
@@ -144,9 +144,91 @@ class block_semester_sortierung_external extends external_api {
             new external_single_structure(
                 array(
                     'coursename' => new external_value(PARAM_TEXT, 'Name of course'),
-                    'semestercode' => new external_value(PARAM_TEXT, 'Semester code'),
+                    'semestercode' => new external_value(PARAM_RAW, 'Semester code'),
+                    'coursenumber' => new external_value(PARAM_RAW, 'Course number'),
                     'description' => new external_value(PARAM_RAW, 'Course description')
                 ), 'course'
+            )
+        );
+    }
+
+    /**
+     * Describes the parameters for get_coursedetails.
+     *
+     * @return external_function_parameters
+     * @since Moodle 3.0
+     */
+    public static function get_coursedetails_parameters() {
+        return new external_function_parameters (
+            array(
+                'userid' => new external_value(PARAM_TEXT, 'user id', VALUE_REQUIRED),
+                'coursenumber' => new external_value(PARAM_TEXT, 'user id', VALUE_REQUIRED)
+            )
+        );
+    }
+
+    /**
+     * Returns a list of user courses
+     *
+     * @return array the forum details
+     * @since Moodle 3.0
+     */
+    public static function get_coursedetails($userid, $courseid) {
+        global $CFG, $DB, $OUTPUT, $USER;
+        require_once(__DIR__ . '/locallib.php');
+        $user = $DB->get_record('user', array('username' => $userid));
+        $courses = $DB->get_records('course', array('idnumber' => $courseid));
+        if (!$user || empty($courses)) {
+            return array();
+        }
+
+        $olduser = $USER;
+        $GLOBALS['USER'] = $user;
+
+        // Fill in expanded courses with course info.
+        $htmlarray = array();
+        // Get all modules as objects.
+        if ($modules = $DB->get_records('modules')) {
+            foreach ($modules as $mod) {
+                if (file_exists($CFG->dirroot.'/mod/'.$mod->name.'/lib.php')) {
+                    include_once($CFG->dirroot.'/mod/'.$mod->name.'/lib.php');
+                    $fname = $mod->name.'_print_overview';
+                    if (function_exists($fname)) {
+                        $fname($courses, $htmlarray);
+                    }
+                }
+            }
+        }
+
+        $GLOBALS['USER'] = $olduser;
+        $htmlarray = reset($htmlarray);
+
+        $result = array();
+
+        foreach ($htmlarray as $modname => $modinfo) {
+            $mod = new stdClass;
+            $mod->modname = $modname;
+            $mod->modinfo = $modinfo;
+            $result[] = $mod;
+        }
+
+        return $result;
+    }
+
+
+    /**
+     * Describes the get_coursedetails return value.
+     *
+     * @return external_single_structure
+     * @since Moodle 2.5
+     */
+    public static function get_coursedetails_returns() {
+        return new external_multiple_structure(
+            new external_single_structure(
+                array(
+                    'modname' => new external_value(PARAM_TEXT, 'Name of module'),
+                    'modinfo' => new external_value(PARAM_RAW, 'Module information')
+                ), 'module'
             )
         );
     }
