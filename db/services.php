@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version page
+ * External API functions
  *
  * @package       block_semester_sortierung
  * @author        Andreas Hruska (andreas.hruska@tuwien.ac.at)
@@ -25,12 +25,34 @@
  * @license       http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die;
 
-defined('MOODLE_INTERNAL') || die();
+$functions = array(
 
-$plugin->version   = 2016052403;
-$plugin->release   = "v3.0";       // User-friendly version number.
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->requires  = 2014041100;      // Requires this Moodle version!
-$plugin->cron      = 0;                  // Period for cron to check this module (secs).
-$plugin->component = 'block_semester_sortierung';    // To check on upgrade, that module sits in correct place.
+    'block_semester_sortierung_get_modules' => array(
+        'classname' => 'block_semester_sortierung_external',
+        'methodname' => 'get_modules',
+        'classpath' => 'blocks/semester_sortierung/externallib.php',
+        'description' => 'Returns a list of all enabled modules in Moodle.',
+        'type' => 'read',
+        'capabilities' => ''
+    ),
+
+    'block_semester_sortierung_get_courses' => array(
+        'classname' => 'block_semester_sortierung_external',
+        'methodname' => 'get_courses',
+        'classpath' => 'blocks/semester_sortierung/externallib.php',
+        'description' => 'Returns a list user current courses',
+        'type' => 'read',
+        'capabilities' => ''
+    ),
+);
+
+// We define the services to install as pre-build services. A pre-build service is not editable by administrator.
+$services = array(
+    'TUWienApp' => array(
+        'functions' => array ('block_semester_sortierung_get_modules', 'block_semester_sortierung_get_courses'),
+        'restrictedusers' => 1,
+        'enabled'=>1,
+    )
+);
