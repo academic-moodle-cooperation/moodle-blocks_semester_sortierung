@@ -126,6 +126,7 @@ class block_semester_sortierung_external extends external_api {
                 $course->coursenumber = $semcourse->idnumber;
                 $course->coursename = $semcourse->fullname;
                 $course->description = $semcourse->summary;
+                $course->courseid = $semcourse->id;
                 $course->semestercode = $semcourse->semester_short;
                 $result[] = $course;
             }
@@ -146,6 +147,7 @@ class block_semester_sortierung_external extends external_api {
                     'coursename' => new external_value(PARAM_TEXT, 'Name of course'),
                     'semestercode' => new external_value(PARAM_RAW, 'Semester code'),
                     'coursenumber' => new external_value(PARAM_RAW, 'Course number'),
+                    'courseid' => new external_value(PARAM_INT, 'Database unique course id'),
                     'description' => new external_value(PARAM_RAW, 'Course description')
                 ), 'course'
             )
@@ -162,7 +164,7 @@ class block_semester_sortierung_external extends external_api {
         return new external_function_parameters (
             array(
                 'userid' => new external_value(PARAM_TEXT, 'user id', VALUE_REQUIRED),
-                'coursenumber' => new external_value(PARAM_TEXT, 'user id', VALUE_REQUIRED)
+                'courseid' => new external_value(PARAM_INT, 'course id', VALUE_REQUIRED)
             )
         );
     }
@@ -177,7 +179,7 @@ class block_semester_sortierung_external extends external_api {
         global $CFG, $DB, $OUTPUT, $USER;
         require_once(__DIR__ . '/locallib.php');
         $user = $DB->get_record('user', array('username' => $userid));
-        $courses = $DB->get_records('course', array('idnumber' => $courseid));
+        $courses = $DB->get_records('course', array('id' => $courseid));
         if (!$user || empty($courses)) {
             return array();
         }
