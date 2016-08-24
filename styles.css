@@ -24,12 +24,14 @@
     margin-bottom: 5px;
     background: none;
     cursor: pointer;
+    word-break: break-all;
 }
 
 .block_semester_sortierung .course > legend  > a {
     font-weight: bold;
     color: #002C73;
     font-size: 15.15px;
+    display: inline-block !important;
 }
 
 .block_semester_sortierung .course > legend > a:hover {
@@ -193,4 +195,10 @@
     margin-top: 5px;
     margin-bottom: 5px;
     height: 30px;
+}
+
+.block_semester_sortierung fieldset.course .coursebox div.name a {
+    word-break: break-all;
+    display: inline-block;
+
 }
