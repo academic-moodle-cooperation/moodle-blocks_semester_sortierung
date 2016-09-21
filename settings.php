@@ -39,10 +39,10 @@ if ($ADMIN->fulltree) {
     // 12 checkboxes for each month; jan, july-dec should be checked by default.
     $monthsarray = array();
     $selected = array();
-    for ($i = 0; $i < 12; $i++) {
-        $monthsarray['mon' . (($i + 1) < 10 ? '0' : '') . strval($i + 1)] = strftime('%B', ($i * 3600 * 24 * 31));
-        if ($i < 1 || $i > 5) {
-            $selected['mon' . (($i + 1) < 10 ? '0' : '') .  strval($i + 1)] = 1;
+    for ($i = 1; $i <= 12; $i++) {
+        $monthsarray['mon' . ($i < 10 ? '0' : '') . strval($i)] = userdate(mktime(1, 0, 0, $i, 1, 2016), '%B');//strftime('%B', ($i * 3600 * 24 * 31));
+        if ($i < 2 || $i > 6) {
+            $selected['mon' . ($i < 10 ? '0' : '') .  strval($i)] = 1;
         }
     }
 
