@@ -45,13 +45,66 @@ AUTHORS
  * Katarzyna Potocka (katarzyna.potocka@tuwien.ac.at)
  * Simeon Naydenov (moniNaydenov@gmail.com)
 
+WEB SERVICE
+================================================================================
+
+
+* Authentication - via token
+
+    Token can be obtained in two ways:
+     * manually from moodle at $CFG->wwwroot/admin/settings.php?section=webservicetokens
+     * by calling $CFG->wwwroot/login/token.php?username=USERNAME&password=PASSWORD&service=SERVICENAME (here SERVICENAME is TUWienApp)
+
+
+* Requests
+
+    Get courses - get all enrolled and active courses for a student
+    url: $CFG->wwwroot/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=block_semester_sortierung_get_courses&wstoken={token}&userid={userid}
+    Method: GET
+    Produces: application/json
+    Sample output:
+        [ {"coursename": "COURSE NAME", "semestercode": "2016S", "description": "COURSE DESCRIPTION", "coursenumber": "015709-2016S", "courseid": 1234567} ]
+
+
+    Get course details - get the course metadata
+    url: $CFG->wwwroot/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=block_semester_sortierung_get_modules&wstoken={token}&userid={userid}&courseid={courseid}
+    Method: GET
+    Produces: application/json
+    Sample output:
+        [ {"modname": "MODULE_NAME", "modinfo": "HTML_INFORMATION"} ]
+
+
+    Get modules - get all active modules
+    url: $CFG->wwwroot/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=block_semester_sortierung_get_modules&wstoken={token}
+    Method: GET
+    Produces: application/json
+    image format: base64 png
+    Sample output:
+        [ {"modname": "MODULE NAME - UNIQUE ID", "title_en": "Module title in English", "title_de": "Module title in German", "image": "base64EncodedImage"} ]
+
+
 CHANGE LOG
 ================================================================================
 
 Taken from git history with bugs' ids taken from redmine log at
-http://git.zserv.tuwien.ac.at/redmine/projects/block_semsort
+http://moodledev.zserv.tuwien.ac.at/redmine/projects/block_semsort
 
-
+2016-11-02: Feature #3782 - Rename web service to SemSort Web service
+2016-09-14: Update #3688 - remove $plugin->cron
+2016-09-07: Bug #3694 - fix months in settings.php to work in all time zones
+2016-07-28: Bug #3574 - fix long course/assignment names
+2016-06-21: Update #2976 - update for moodle 3.1
+2016-05-24: Add external web service
+2016-05-19: AutoTesting #3281, #3280, #3279, #3284 - add first behat tests
+2016-04-13: Feature #2729 - add first two behat tests
+2016-03-28: Update #3125 - update and test on moodle 3.0.3
+2016-03-18: Bug #3108: Replaced 'seperate' by 'separate' in english and german lang files.
+2016-03-16: Bug #3108 - add missing empty space character
+2015-10-14: Bug #2713 - fix bug with adding course to favorites - course can be added more than once
+2015-09-24: Update #2491 - update for moodle 2.9.2
+2015-09-23: increase version number
+2015-09-19: HOTFIX #2647: fix star icon layout
+2015-06-10: Feature #1970 - switch places of expand and move symbol
 2015-05-26: Feature #2354 - fix code to pass code checker
 2015-05-26: Feature #1970 - add personal sorting capability:
                             add admin setting
