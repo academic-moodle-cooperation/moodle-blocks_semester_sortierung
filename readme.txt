@@ -53,7 +53,7 @@ WEB SERVICE
 
     Token can be obtained in two ways:
      * manually from moodle at $CFG->wwwroot/admin/settings.php?section=webservicetokens
-     * by calling $CFG->wwwroot/login/token.php?username=USERNAME&password=PASSWORD&service=SERVICENAME (here SERVICENAME is TUWienApp)
+     * by calling $CFG->wwwroot/login/token.php?username=USERNAME&password=PASSWORD&service=SERVICENAME (here SERVICENAME is SemSort Web service)
 
 
 * Requests
