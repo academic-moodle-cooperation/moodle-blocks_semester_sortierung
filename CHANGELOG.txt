@@ -1,0 +1,69 @@
+CHANGELOG
+=========
+
+3.2.0 (201?-??-??)
+------------------
+
+* Moodle 3.2 compatible version
+* [FEATURE] #3782 Rename web service to SemSort Web service
+* [REMOVED] #3688 Deprecated $plugin->cron
+
+
+3.1.1 (2016-09-21)
+------------------
+
+* [FIXED] #3694 Months in settings.php to work in all time zones
+
+
+3.1.0 (2016-07-28)
+------------------
+
+* Moodle 3.1 compatible version
+* [FEATURE] Add external web service
+* [FIXED] #3574 Long course/assignment names
+* Added behat tests
+
+
+3.0.0 (2016-03-28)
+------------------
+
+* Moodle 3.0 compatible version
+* [FIXED] #3108 German lang file
+
+
+2.9 (2015-10-14)
+----------------
+
+* Moodle 2.9 compatible version
+* [FIXED] #2713 Bug with adding course to favorites - course can be added more
+  than once
+
+
+2.8.1 (2015-09-18)
+------------------
+
+* [FIXED] #2647: Star icon layout
+
+
+2.8 (2015-05-25)
+----------------
+
+* Moodle 2.8 compatible version
+* [FEATURE] #1970 Add personal sorting capability
+* [CHANGED] #2354 Fix code to pass code checker
+* [FIXED] #2337 Enable user to delete the block in his own my moodle page
+
+
+2.7 (2014-12-08)
+----------------
+
+* Moodle 2.7 compatible version
+* [FIXED] #2072 Changed settings plugin name to block_semester_sortierung, fix
+  bug with config
+* [Fixed] version.php and file headers
+
+
+2.6 (2014-08-27)
+----------------
+
+* First release for Moodle 2.6

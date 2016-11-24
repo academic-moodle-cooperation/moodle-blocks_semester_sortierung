@@ -15,21 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version page
- *
- * @package       block_semester_sortierung
- * @author        Andreas Hruska (andreas.hruska@tuwien.ac.at)
- * @author        Katarzyna Potocka (katarzyna.potocka@tuwien.ac.at)
- * @author        Simeon Naydenov (moniNaydenov@gmail.com)
- * @copyright     2014 Academic Moodle Cooperation {@link http://www.academic-moodle-cooperation.org}
- * @license       http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   block_semester_sortierung
+ * @author    Simeon Naydenov (moniNaydenov@gmail.com)
+ * @author    Katarzyna Potocka (katarzyna.potocka@tuwien.ac.at)
+ * @copyright 2014 Academic Moodle Cooperation {@link http://www.academic-moodle-cooperation.org}
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version   = 2016110202;
-$plugin->release   = "v3.2.0";       // User-friendly version number.
+$plugin->requires  = 2016110800;
+$plugin->component = 'block_semester_sortierung';
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->requires  = 2014041100;      // Requires this Moodle version!
-$plugin->component = 'block_semester_sortierung';    // To check on upgrade, that module sits in correct place.
+$plugin->release   = "v3.2.0";
