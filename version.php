@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version   = 2016110202;
-$plugin->requires  = 2016110800;
+$plugin->requires  = 2016112200;
 $plugin->component = 'block_semester_sortierung';
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->release   = "v3.2.0";
