@@ -59,11 +59,6 @@ $functions = array(
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
 $services = array(
-    'TUWienApp' => array(
-        'functions' => array ('block_semester_sortierung_get_modules', 'block_semester_sortierung_get_courses', 'block_semester_sortierung_get_coursedetails' ),
-        'restrictedusers' => 1,
-        'enabled'=>1,
-    ),
     'SemSort web service' => array(
         'functions' => array ('block_semester_sortierung_get_modules', 'block_semester_sortierung_get_courses', 'block_semester_sortierung_get_coursedetails' ),
         'restrictedusers' => 1,
