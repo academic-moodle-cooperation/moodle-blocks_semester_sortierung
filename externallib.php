@@ -62,6 +62,14 @@ class block_semester_sortierung_external extends external_api {
             $m->title_en = (new lang_string('pluginname', 'mod_' . $module->name, null, 'en'))->out();
             $m->title_de = (new lang_string('pluginname', 'mod_' . $module->name, null, 'de'))->out();
             $m->image = base64_encode(file_get_contents($OUTPUT->pix_url('icon', 'mod_' . $module->name)));//$CFG->dirroot . '/mod/' . $module->name . '/pix/icon.png'));
+            if (empty($m->image)) {
+                $imagepath = $CFG->dirroot . '/mod/' . $module->name . '/pix/icon.';
+                if (file_exists($imagepath . 'png')) {
+                    $m->image = base64_encode(file_get_contents($imagepath . 'png'));
+                } else if (file_exists($imagepath . 'gif')) {
+                    $m->image = base64_encode(file_get_contents($imagepath . 'gif'));
+                }
+            }
             $result[] = $m;
         }
         return $result;
