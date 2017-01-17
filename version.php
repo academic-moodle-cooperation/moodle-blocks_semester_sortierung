@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Version information
+ *
  * @package   block_semester_sortierung
  * @author    Simeon Naydenov (moniNaydenov@gmail.com)
  * @author    Katarzyna Potocka (katarzyna.potocka@tuwien.ac.at)
@@ -25,8 +27,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2016110202;
-$plugin->requires  = 2016112200;
+$plugin->version   = 2016120500;
+$plugin->requires  = 2016120500;
 $plugin->component = 'block_semester_sortierung';
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->release   = "v3.2.0";
