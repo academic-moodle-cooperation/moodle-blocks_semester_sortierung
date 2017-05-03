@@ -118,12 +118,13 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
         $exportercache = new \core_calendar\external\events_related_objects_cache($allevents, $sortedcoursesexpanded);
         $exporter = new \core_calendar\external\events_grouped_by_course_exporter($allevents, ['cache' => $exportercache]);
 
-        $exportedevents = $exporter->export($this);
+        $exportedeventsraw = $exporter->export($this);
+        $exportedevents = array();
 
-        if (isset($exportedevents->groupedbycourse)) {
-            $exportedevents = $exportedevents->groupedbycourse;
-        } else {
-            $exportedevents = array();
+        if (isset($exportedeventsraw->groupedbycourse)) {
+            foreach ($exportedeventsraw->groupedbycourse as $courseevents) {
+                $exportedevents[$courseevents->courseid] = $courseevents;
+            }
         }
 
 
