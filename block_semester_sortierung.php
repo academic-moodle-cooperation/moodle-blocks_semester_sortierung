@@ -77,7 +77,7 @@ class block_semester_sortierung extends block_base {
 
         $content = array();
         // Get the information about the enrolled courses.
-        $courses = enrol_get_my_courses('id, fullname, shortname', 'visible DESC, fullname ASC');
+        $courses = enrol_get_my_courses('id, fullname, shortname, summary, summaryformat, enddate', 'visible DESC, fullname ASC');
         $cid = optional_param('block_semester_sortierung_favorites', null, PARAM_ALPHANUM);
         $status = optional_param('status', null, PARAM_ALPHANUM);
         if (!empty($cid)) {

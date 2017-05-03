@@ -43,6 +43,8 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
     public function semester_sortierung($sortedcourses, array $remotecourses=array(), $config = null) {
         global $CFG, $DB;
 
+        require_once($CFG->dirroot . '/calendar/externallib.php');
+
         $html = '';
 
         $movecourse = optional_param('block_semester_sortierung_move_course', 0, PARAM_INT);
@@ -96,17 +98,34 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
         // Fill in expanded courses with course info.
         $htmlarray = array();
         // Get all modules as objects.
-        if ($modules = $DB->get_records('modules')) {
+        /*if ($modules = $DB->get_records('modules')) {
             foreach ($modules as $mod) {
                 if (file_exists($CFG->dirroot.'/mod/'.$mod->name.'/lib.php')) {
                     include_once($CFG->dirroot.'/mod/'.$mod->name.'/lib.php');
                     $fname = $mod->name.'_print_overview';
                     if (function_exists($fname)) {
-                        $fname($sortedcoursesexpanded, $htmlarray);
+                       // $fname($sortedcoursesexpanded, $htmlarray);
                     }
                 }
             }
+        }*/
+
+        $allevents = \core_calendar\local\api::get_action_events_by_courses(
+            $sortedcoursesexpanded
+        );
+
+
+        $exportercache = new \core_calendar\external\events_related_objects_cache($allevents, $sortedcoursesexpanded);
+        $exporter = new \core_calendar\external\events_grouped_by_course_exporter($allevents, ['cache' => $exportercache]);
+
+        $exportedevents = $exporter->export($this);
+
+        if (isset($exportedevents->groupedbycourse)) {
+            $exportedevents = $exportedevents->groupedbycourse;
+        } else {
+            $exportedevents = array();
         }
+
 
         foreach ($sortedcourses as $semester => $semesterinfo) {
             $isfavorites = $semester == 'fav';
@@ -147,7 +166,7 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
                     }
                 }
                 $content .= $this->course_html($course,
-                    $htmlarray,
+                    $exportedevents,
                     isset($coursesexpanded[$courseid]),
                     isset($favorites[$courseid]),
                     $showfavorites,
@@ -222,7 +241,7 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
         return $html;
     }
 
-    private function course_html($course, $htmlarray, $courseexpanded, $isfav, $showfavorites, $userediting) {
+    private function course_html($course, $exportedevents, $courseexpanded, $isfav, $showfavorites, $userediting) {
         // Prints course as in standard course overview block.
         $html = '';
         $classes = array('course');
@@ -263,14 +282,14 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
             $html .= html_writer::tag('div', '');
         }
         $html .= html_writer::start_tag('div', array('class' => 'expandablebox'));
-        if (isset($htmlarray[$course->id])) {
+        /*if (isset($allevents[$course->id]) && !empty($allevents[$course->id])) {
             $html .= html_writer::start_tag('div', array('class' => 'coursebox'));
 
             foreach ($htmlarray[$course->id] as $modname => $modhtml) {
                 $html .= $modhtml;
             }
-            $html .= html_writer::end_tag('div');
-        }
+        }*/
+        $html .= $this->render_course_info($course->id, $exportedevents);
         $html .= html_writer::end_tag('div');
 
         $html .= html_writer::end_tag('fieldset');
@@ -279,7 +298,7 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
 
     private function get_personalsort_icons($courseid, $semester) {
         $html = html_writer::empty_tag('img', array(
-            'src' => $this->output->pix_url('i/dragdrop'),
+            'src' => $this->output->image_url('i/dragdrop'),
             'class' => 'iconsmall move-drag-start hidden'
         ));
         $html .= html_writer::start_tag('a', array( // No-js icon.
@@ -289,13 +308,22 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
             'class' => 'move-static'
         ));
         $html .= html_writer::empty_tag('img', array(
-            'src' => $this->output->pix_url('t/move'),
+            'src' => $this->output->image_url('t/move'),
             'class' => 'iconsmall'
         ));
         $html .= html_writer::end_tag('a');
 
 
         return $html;
+    }
+
+    private function render_course_info($courseid, $exportedevents) {
+        if (!isset($exportedevents[$courseid]) || empty($exportedevents[$courseid]->events)) {
+            return '';
+        }
+
+        $output = $this->render_from_template('block_semester_sortierung/course-event-list', $exportedevents[$courseid]);
+        return $output;
     }
 
     private function get_favorites_icon($courseid, $addorrem, $isfav) {
@@ -306,7 +334,7 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
             'class' => 'togglefavorites ' . ($addorrem ? 'on' : 'off') . ($isfav ? '' : ' invisible'),
             'data-fav' => strval($addorrem)));
         $content .= html_writer::empty_tag('img', array(
-            'src' => $this->output->pix_url($addorrem ? 'fav_on' : 'fav_off', 'block_semester_sortierung'),
+            'src' => $this->output->image_url($addorrem ? 'fav_on' : 'fav_off', 'block_semester_sortierung'),
             'alt' => get_string($addorrem ? 'removefromfavorites' : 'addtofavorites', 'block_semester_sortierung'),
             'title' => get_string($addorrem ? 'removefromfavorites' : 'addtofavorites', 'block_semester_sortierung'),
             'class' => 'favoriteicon'));
