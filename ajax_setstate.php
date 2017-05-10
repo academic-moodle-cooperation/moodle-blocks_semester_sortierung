@@ -27,7 +27,9 @@
 
 define('AJAX_SCRIPT', true);
 
-require_once('../../config.php');
+require_once(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/locallib.php');
+
 
 $boxid = required_param('id', PARAM_ALPHANUM);
 $state = required_param('state', PARAM_INT);
@@ -62,5 +64,19 @@ set_user_preference($prefname, $expanded);
 
 if ($boxtype == 'c' && $courseajax) {
     $cid = $boxid;
-    include('ajax_modinfo.php');
+
+
+    $courses = $DB->get_records('course', array('id' => $cid));
+    if (count($courses) > 0) {
+
+        $PAGE->set_context(\context_course::instance($cid));
+        $output = $PAGE->get_renderer('block_semester_sortierung');
+
+        $expandedevents = block_semester_sortierung_get_courses_events($courses, $output);
+
+        echo $output->header();
+        echo $output->render_course_info($cid, $expandedevents);
+
+    }
+
 }

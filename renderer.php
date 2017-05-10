@@ -43,8 +43,6 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
     public function semester_sortierung($sortedcourses, array $remotecourses=array(), $config = null) {
         global $CFG, $DB;
 
-        require_once($CFG->dirroot . '/calendar/externallib.php');
-
         $html = '';
 
         $movecourse = optional_param('block_semester_sortierung_move_course', 0, PARAM_INT);
@@ -110,23 +108,7 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
             }
         }*/
 
-        $allevents = \core_calendar\local\api::get_action_events_by_courses(
-            $sortedcoursesexpanded
-        );
-
-
-        $exportercache = new \core_calendar\external\events_related_objects_cache($allevents, $sortedcoursesexpanded);
-        $exporter = new \core_calendar\external\events_grouped_by_course_exporter($allevents, ['cache' => $exportercache]);
-
-        $exportedeventsraw = $exporter->export($this);
-        $exportedevents = array();
-
-        if (isset($exportedeventsraw->groupedbycourse)) {
-            foreach ($exportedeventsraw->groupedbycourse as $courseevents) {
-                $exportedevents[$courseevents->courseid] = $courseevents;
-            }
-        }
-
+        $exportedevents = block_semester_sortierung_get_courses_events($sortedcoursesexpanded, $this);
 
         foreach ($sortedcourses as $semester => $semesterinfo) {
             $isfavorites = $semester == 'fav';
@@ -318,7 +300,7 @@ class block_semester_sortierung_renderer extends plugin_renderer_base {
         return $html;
     }
 
-    private function render_course_info($courseid, $exportedevents) {
+    public function render_course_info($courseid, $exportedevents) {
         if (!isset($exportedevents[$courseid]) || empty($exportedevents[$courseid]->events)) {
             return '';
         }

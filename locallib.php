@@ -262,3 +262,29 @@ function block_semester_sortierung_get_semester($config, $timestamp) {
     return $ret;
 
 }
+
+function block_semester_sortierung_get_courses_events($courses, $output) {
+    global $CFG;
+
+    require_once($CFG->dirroot . '/calendar/lib.php');
+    require_once($CFG->dirroot . '/calendar/externallib.php');
+
+
+    $allevents = \core_calendar\local\api::get_action_events_by_courses(
+        $courses
+    );
+
+
+    $exportercache = new \core_calendar\external\events_related_objects_cache($allevents, $courses);
+    $exporter = new \core_calendar\external\events_grouped_by_course_exporter($allevents, ['cache' => $exportercache]);
+
+    $exportedeventsraw = $exporter->export($output);
+    $exportedevents = array();
+
+    if (isset($exportedeventsraw->groupedbycourse)) {
+        foreach ($exportedeventsraw->groupedbycourse as $courseevents) {
+            $exportedevents[$courseevents->courseid] = $courseevents;
+        }
+    }
+    return $exportedevents;
+}
