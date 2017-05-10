@@ -120,6 +120,7 @@ class block_semester_sortierung_external extends external_api {
 
         // Get the information about the enrolled courses.
         $courses = enrol_get_all_users_courses($user->id, false , 'id, fullname, shortname, idnumber, summary');
+
         $config = get_config('block_semester_sortierung');
         // Add the semester to each course.
         $courses = block_semester_sortierung_fill_course_semester($courses, $config);
@@ -184,43 +185,32 @@ class block_semester_sortierung_external extends external_api {
      * @since Moodle 3.0
      */
     public static function get_coursedetails($userid, $courseid) {
-        global $CFG, $DB, $OUTPUT, $USER;
+        global $CFG, $DB, $OUTPUT, $USER, $PAGE;
         require_once(__DIR__ . '/locallib.php');
         $user = $DB->get_record('user', array('username' => $userid));
         $courses = $DB->get_records('course', array('id' => $courseid));
         if (!$user || empty($courses)) {
             return array();
         }
+        $context = \context_course::instance($courseid);
+        self::validate_context($context);
 
         $olduser = $USER;
         $GLOBALS['USER'] = $user;
+        $result = array();
+        $output = $PAGE->get_renderer('block_semester_sortierung');
+        $expandedevents = block_semester_sortierung_get_courses_events($courses, $output);
+        if (isset($expandedevents[$courseid]) && !empty($expandedevents[$courseid]->events)) {
 
-        // Fill in expanded courses with course info.
-        $htmlarray = array();
-        // Get all modules as objects.
-        if ($modules = $DB->get_records('modules')) {
-            foreach ($modules as $mod) {
-                if (file_exists($CFG->dirroot.'/mod/'.$mod->name.'/lib.php')) {
-                    include_once($CFG->dirroot.'/mod/'.$mod->name.'/lib.php');
-                    $fname = $mod->name.'_print_overview';
-                    if (function_exists($fname)) {
-                        $fname($courses, $htmlarray);
-                    }
-                }
+            foreach ($expandedevents[$courseid]->events as $event) {
+                $mod = new \stdClass;
+                $mod->modname = $event->modulename;
+                $mod->modinfo = $output->render_from_template('block_semester_sortierung/course-event-list-item-clean', $event);
+                $result[] = $mod;
             }
         }
 
         $GLOBALS['USER'] = $olduser;
-        $htmlarray = reset($htmlarray);
-
-        $result = array();
-
-        foreach ($htmlarray as $modname => $modinfo) {
-            $mod = new stdClass;
-            $mod->modname = $modname;
-            $mod->modinfo = $modinfo;
-            $result[] = $mod;
-        }
 
         return $result;
     }
