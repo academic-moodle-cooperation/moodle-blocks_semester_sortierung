@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+3.3.0 (2016-05-14)
+------------------
+
+* Moodle 3.3 compatible version
+* [FEATURE] use course events as in the core my_overview block
+* [FEATURE] use Mustache templates to render course events
+* [DEPRECATED] use of modname_print_overview()
+
+
 3.2.0 (2016-02-05)
 ------------------
 
