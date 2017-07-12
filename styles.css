@@ -16,30 +16,36 @@
 .block_semester_sortierung .semester > legend {
     font-weight: bold;
     cursor: pointer;
-    color: #3D4653;
+  /*  color: #3D4653;*/
     font-size: 16px;
+    margin-top: 0;
 }
 .block_semester_sortierung .course > legend  {
     margin-top: 5px;
     margin-bottom: 5px;
     background: none;
     cursor: pointer;
-    word-break: break-all;
+    /*word-break: break-all;*/
+    white-space: nowrap;
+    max-width: 100%;
 }
 
-.block_semester_sortierung .course > legend  > a {
+.block_semester_sortierung .course > legend > a {
     font-weight: bold;
-    color: #002C73;
+    /*color: #002C73;*/
     font-size: 15.15px;
     display: inline-block !important;
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: 94%;
 }
 
 .block_semester_sortierung .course > legend > a:hover {
-    color: #CC0033;
+    /*color: #CC0033;*/
 }
 
 .block_semester_sortierung .course > legend > a.dimmed {
-    color: #AAAAAA;
+    /*color: #AAAAAA;*/
 }
 
 .block_semester_sortierung .expandablebox {
@@ -116,7 +122,9 @@
     min-height: 30px;
 }
 
-.block_semester_sortierung .no_javascript .semester .favoriteicon, .block_semester_sortierung .semester.nosemester .favoriteicon, .block_semester_sortierung .semester.expanded .favoriteicon {
+.block_semester_sortierung .no_javascript .semester .favoriteicon,
+.block_semester_sortierung .semester.nosemester .favoriteicon,
+.block_semester_sortierung .semester.expanded .favoriteicon {
     position: relative;
     top: 0px;
     right: 0px;
@@ -141,9 +149,9 @@
 
 /* end of bigger fix */
 
-.block_semester_sortierung .no_javascript .semester .favoriteicon,
-.block_semester_sortierung .semester.nosemester .favoriteicon,
-.block_semester_sortierung .semester.expanded .favoriteicon{
+.block_semester_sortierung .no_javascript .semester .togglefavorites img,
+.block_semester_sortierung .semester.nosemester .togglefavorites img,
+.block_semester_sortierung .semester.expanded .togglefavorites img{
     height: 16px;
     width: 17px;
     right: 0px;
@@ -195,10 +203,47 @@
     margin-top: 5px;
     margin-bottom: 5px;
     height: 30px;
+    display: block;
+    border-width: 2px;
+    border-style: dashed;
 }
 
 .block_semester_sortierung fieldset.course .coursebox div.name a {
     word-break: break-all;
     display: inline-block;
 
+}
+
+
+@media (max-width: 991px) {
+
+    .block_semester_sortierung .course > legend > a {
+        max-width: 92%;
+    }
+}
+
+
+
+
+@media (max-width: 767px) {
+    .block_semester_sortierung .course > legend > a {
+        max-width: 88%;
+    }
+
+}
+
+
+
+@media (max-width: 575px) {
+
+    .block_semester_sortierung .course > legend > a {
+        max-width: 81%;
+    }
+}
+
+@media (max-width: 375px) {
+
+    .block_semester_sortierung .course > legend > a {
+        max-width: 75%;
+    }
 }

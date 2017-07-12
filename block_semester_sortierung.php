@@ -68,14 +68,40 @@ class block_semester_sortierung extends block_base {
         if ($this->content !== null) {
             return $this->content;
         }
+
         $config = get_config('block_semester_sortierung');
+
         $this->config = $config;
+
 
         $this->content = new stdClass();
         $this->content->text = '';
         $this->content->footer = '';
 
         $content = array();
+
+        $renderer = $this->page->get_renderer('block_semester_sortierung');
+
+        // More remote courses stuff, directly copied from Course overview block
+        // Output buffering is used here.
+        if (FALSE && empty($courses) && empty($remotecourses)) {
+            $content[] = get_string('nocourses', 'my');
+        } else {
+            //$content[] = $renderer->render_block($context);
+            $content[] = $renderer->semester_sortierung($this);
+            //$content[] = $renderer->semester_sortierung($courses, $remotecourses, $config);
+        }
+
+        $this->content->text = implode($content); // Compile the text from the array.
+
+        return $this->content;
+    }
+
+    public function export_for_template(renderer_base $output) {
+
+        $context = new stdClass;
+
+
         // Get the information about the enrolled courses.
         $courses = enrol_get_my_courses('id, fullname, shortname, summary, summaryformat, enddate', 'visible DESC, fullname ASC');
         $cid = optional_param('block_semester_sortierung_favorites', null, PARAM_ALPHANUM);
@@ -96,7 +122,6 @@ class block_semester_sortierung extends block_base {
         if (empty($remotecourses)) {
             $remotecourses = array();
         }
-        $renderer = $this->page->get_renderer('block_semester_sortierung');
 
         // Moodle hack - removes the site(main course with id usually 0 or 1) from the list of courses
         // There is no information in that "course".
@@ -112,21 +137,60 @@ class block_semester_sortierung extends block_base {
             }
         }
         // Add the semester to each course.
-        $courses = block_semester_sortierung_fill_course_semester($courses, $config);
-        $courses = block_semester_sortierung_sort_user_personal_sort($courses, $config);
+        $courses = block_semester_sortierung_fill_course_semester($courses, $this->config);
+        $courses = block_semester_sortierung_sort_user_personal_sort($courses, $this->config);
 
-        // More remote courses stuff, directly copied from Course overview block
-        // Output buffering is used here.
-        if (empty($courses) && empty($remotecourses)) {
-            $content[] = get_string('nocourses', 'my');
+        $context->courses = $courses;
+
+        if ($semestersexpanded = get_user_preferences('semester_sortierung_semesters', '')) {
+            $context->semestersexpanded = array_flip(explode(',', $semestersexpanded));
         } else {
-
-            $content[] = $renderer->semester_sortierung($courses, $remotecourses, $config);
+            $context->semestersexpanded = array();
         }
 
-        $this->content->text = implode($content); // Compile the text from the array.
+        if ($coursesexpanded = get_user_preferences('semester_sortierung_courses', '')) {
+            $coursesexpanded = array_flip(explode(',', $coursesexpanded));
+        } else {
+            $coursesexpanded = array();
+        }
 
-        return $this->content;
+
+
+        if ($favorites = get_user_preferences('semester_sortierung_favorites', '')) {
+            $context->favorites = array_flip(explode(',', $favorites));
+        } else {
+            $context->favorites = array();
+        }
+
+
+        $context->coursesexpanded = array();
+
+        // Create an array with expanded courses to be filled up with info.
+        foreach ($context->courses as $semester => $semesterinfo) {
+            foreach ($semesterinfo['courses'] as $id => $courseinfo) {
+                if (isset($coursesexpanded[strval($courseinfo->id)])) {
+                    $context->coursesexpanded[$courseinfo->id] = $courseinfo;
+                }
+            }
+        }
+
+
+        $context->exportedevents = block_semester_sortierung_get_courses_events($context->coursesexpanded, $output);
+
+
+        // Whether the courses should be sorted.
+        $context->sorted = (isset($this->config->sortcourses) && $this->config->sortcourses == '1');
+
+        $context->showfavorites = (isset($this->config->enablefavorites) && $this->config->enablefavorites == '1');
+        $context->personalsort = (isset($this->config->enablepersonalsort) && $this->config->enablepersonalsort == '1') && $context->sorted;
+        // Prevent personal sort when not enabled in the setting.
+        $context->userediting = $context->personalsort && $this->page->user_is_editing();
+
+
+
+        $context->remotecourses = $remotecourses;
+        $context->config = $this->config;
+        return $context;
     }
 
 

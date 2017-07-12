@@ -48,8 +48,10 @@ SEMSORT.prototype = {
     },
     
     toggleFavorites : function(e) {
-        var target = e.currentTarget.ancestor();
+        var target = e.currentTarget.ancestor('fieldset.course');
+
         var cid = target.getData('id');
+
         var stat = '0';
         if (target.getData('fav') == '0') {
             target.one('.togglefavorites.on').removeClass('invisible');
@@ -64,6 +66,7 @@ SEMSORT.prototype = {
             target.setAttribute('data-fav', 1);
             this.sortFavorites();
             Y.one('#semesteroverviewcontainer fieldset.fav').removeClass('empty');
+            console.log(newtarget);
         } else {
             Y.one('#semesteroverviewcontainer fieldset.fav').all('fieldset.course').each(function(e) {
                     if (e.getData('id') == cid) {
@@ -155,7 +158,7 @@ SEMSORT.prototype = {
 
 
 var makeCourseDraggable = function(v, k) {
-    var imagenode = v.one('legend img.move-drag-start');
+    var imagenode = v.one('legend span.move-drag-start');
     var nojslink = v.one('legend a.move-static');
     if (imagenode) {
         imagenode.removeClass('hidden');
@@ -174,7 +177,7 @@ var makeCourseDraggable = function(v, k) {
                 constrain2node: '#semesteroverviewcontainer',
                 stickY: true
             });
-        dd.addHandle('legend img.move-drag-start');
+        dd.addHandle('legend span.move-drag-start');
     }
 };
 
