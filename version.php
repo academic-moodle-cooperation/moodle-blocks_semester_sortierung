@@ -31,4 +31,4 @@ $plugin->version   = 2017051401;
 $plugin->requires  = 2017051200;
 $plugin->component = 'block_semester_sortierung';
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = "v3.3.0";
+$plugin->release   = "v3.3.1";
