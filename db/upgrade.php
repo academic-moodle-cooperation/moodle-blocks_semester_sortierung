@@ -1,64 +1,74 @@
 <?php
-// This file is part of block_semester_sortierung for Moodle - http://moodle.org/
-//
-// Moodle is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Moodle is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Upgrade script
  *
- * @package       block_semester_sortierung
- * @author        Andreas Hruska (andreas.hruska@tuwien.ac.at)
- * @author        Katarzyna Potocka (katarzyna.potocka@tuwien.ac.at)
+ * @package       moodle34
  * @author        Simeon Naydenov (moniNaydenov@gmail.com)
- * @copyright     2014 Academic Moodle Cooperation {@link http://www.academic-moodle-cooperation.org}
+ * @copyright     2018
  * @license       http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
 
-
-function xmldb_block_semester_sortierung_upgrade($oldversion, $block) {
+function xmldb_block_semester_sortierung_upgrade($oldversion) {
     global $DB;
 
-    if ($oldversion < 2013010904) {
-        $settings = $DB->get_records_list('config', 'name', array('semester_sortierung_wintermonths',
-            'semester_sortierung_sortcourses'));
+    $dbman = $DB->get_manager();
+    if ($oldversion < 2017111302) {
+        require_once(__DIR__ . '/../locallib.php');
 
-        $dataobject = new stdClass;
-        $dataobject->plugin = 'blocks/semester_sortierung';
-        foreach ($settings as $id => $settingobj) {
-            $dataobject->name = substr($settingobj->name, 20);
-            $dataobject->value = $settingobj->value;
-            if (!$DB->record_exists('config_plugins', array(
-                'plugin' => 'blocks/semester_sortierung',
-                'name' => $dataobject->name
-            ))) {
-                $DB->insert_record('config_plugins', $dataobject);
-                $DB->delete_records('config', array('name' => $settingobj->name));
+        // Define table block_semester_sortierung_us to be created.
+        $table = new xmldb_table('block_semester_sortierung_us');
+
+        // Adding fields to table block_semester_sortierung_us.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '9', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '9', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('semester', XMLDB_TYPE_CHAR, '6', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('courseorder', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('lastmodified', XMLDB_TYPE_INTEGER, '9', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table block_semester_sortierung_us.
+        $table->add_key('idindex', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for block_semester_sortierung_us.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+
+        $userprefs = $DB->get_records('user_preferences', array('name' => 'semester_sortierung_sorting'));
+        $counters = new stdClass;
+        $counters->updated = 0;
+        $counters->inserted = 0;
+        $counters->unchanged = 0;
+        $counters->userprefs = 0;
+        foreach ($userprefs as $userpref) {
+            $userid = $userpref->userid;
+            $value = json_decode($userpref->value, true);
+            foreach ($value as $semester => $courses) {
+                $courses = implode(',', $courses);
+                $currentprefs = block_semester_sortierung_get_usersort($userid);
+                if (isset($currentprefs[$semester])) {
+                    if ($courses != $currentprefs[$semester]->courseorder) {
+                        $currentprefs[$semester]->courseorder = $courses;
+                        $currentprefs[$semester]->lastmodified = time();
+                        $DB->update_record('block_semester_sortierung_us', $currentprefs[$semester]);
+                        $counters->updated++;
+                    } else {
+                        $counters->unchanged++;
+                    }
+                } else {
+                    $newpref = new stdClass;
+                    $newpref->semester = $semester;
+                    $newpref->courseorder = $courses;
+                    $newpref->lastmodified = time();
+                    $newpref->userid = $userid;
+                    $DB->insert_record('block_semester_sortierung_us', $newpref);
+                    $counters->inserted++;
+                }
             }
         }
-        upgrade_block_savepoint(true, 2013010904, 'semester_sortierung');
-    }
 
-    if ($oldversion < 2014033101) {
-        $settings = $DB->get_records('config_plugins', array('plugin' => 'blocks/semester_sortierung'));
-        foreach ($settings as $id => $setting) {
-            $setting->plugin = 'block_semester_sortierung';
-            $DB->update_record('config_plugins', $setting, true);
-        }
-        upgrade_block_savepoint(true, 2014033101, 'semester_sortierung');
+        // Semester_sortierung savepoint reached.
+        upgrade_block_savepoint(true, 2017111302, 'semester_sortierung');
     }
-
-    return true;
 }

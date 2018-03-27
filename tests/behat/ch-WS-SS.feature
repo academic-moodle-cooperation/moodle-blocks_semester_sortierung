@@ -17,7 +17,7 @@ Feature: Change WS and SS
     When I log in as "teacher1"
     And I click on "Dashboard" "link" in the "Navigation" "block"
     And I click on "Customise this page" "button"
-    And I add the "semester_sortierung" block 
+    And I add the "semester_sortierung" block
 
     Then I should see "Winter term" in the "Semester overview" "block"
     Then I should see "Summer term" in the "Semester overview" "block"

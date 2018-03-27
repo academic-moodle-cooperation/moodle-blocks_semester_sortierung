@@ -59,9 +59,15 @@ class block_semester_sortierung_external extends external_api {
             $m = new stdClass;
             $m->name = $module->name;
 
-            $m->title_en = (new lang_string('pluginname', 'mod_' . $module->name, null, 'en'))->out();
-            $m->title_de = (new lang_string('pluginname', 'mod_' . $module->name, null, 'de'))->out();
-            $m->image = base64_encode(file_get_contents($OUTPUT->image_url('icon', 'mod_' . $module->name)));//$CFG->dirroot . '/mod/' . $module->name . '/pix/icon.png'));
+            $m->title_en = (new lang_string('pluginname',
+                                            'mod_' . $module->name,
+                                            null,
+                                            'en'))->out();
+            $m->title_de = (new lang_string('pluginname',
+                                            'mod_' . $module->name,
+                                            null,
+                                            'de'))->out();
+            $m->image = base64_encode(file_get_contents($OUTPUT->image_url('icon', 'mod_' . $module->name)));
             if (empty($m->image)) {
                 $imagepath = $CFG->dirroot . '/mod/' . $module->name . '/pix/icon.';
                 if (file_exists($imagepath . 'png')) {
@@ -196,7 +202,7 @@ class block_semester_sortierung_external extends external_api {
         self::validate_context($context);
 
         $olduser = $USER;
-        $GLOBALS['USER'] = $user;
+        $GLOBALS['USER'] = $user; // Note for codechecker - GLOBALS is a php reserved variable, can't really change it.
         $result = array();
         $output = $PAGE->get_renderer('block_semester_sortierung');
         $expandedevents = block_semester_sortierung_get_courses_events($courses, $output);
@@ -210,7 +216,7 @@ class block_semester_sortierung_external extends external_api {
             }
         }
 
-        $GLOBALS['USER'] = $olduser;
+        $GLOBALS['USER'] = $olduser; // Note for codechecker - GLOBALS is a php reserved variable, can't really change it.
 
         return $result;
     }

@@ -27,6 +27,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+$ADMIN->add('blocksettings', new admin_category('blocksettingsemester_sortierungfolder', new lang_string('pluginname', 'block_semester_sortierung')));
+
 if ($ADMIN->fulltree) {
 
     $configs = array();
@@ -40,7 +42,8 @@ if ($ADMIN->fulltree) {
     $monthsarray = array();
     $selected = array();
     for ($i = 1; $i <= 12; $i++) {
-        $monthsarray['mon' . ($i < 10 ? '0' : '') . strval($i)] = userdate(mktime(1, 0, 0, $i, 1, 2016), '%B');//strftime('%B', ($i * 3600 * 24 * 31));
+        $monthsarray['mon' . ($i < 10 ? '0' : '') . strval($i)] = userdate(mktime(1, 0, 0, $i, 1, 2016),
+                                                                          '%B');
         if ($i < 2 || $i > 6) {
             $selected['mon' . ($i < 10 ? '0' : '') .  strval($i)] = 1;
         }
@@ -62,6 +65,36 @@ if ($ADMIN->fulltree) {
         get_string('enablepersonalsortdesc', 'block_semester_sortierung'),
         '1');
 
+    $values = array();
+    for ($i = 0; $i < 16; $i++) {
+        $values[$i] = strval($i);
+    }
+    $values[0] = get_string('no');
+    $configs[] = new admin_setting_configselect('archive',
+        get_string('setting:archive', 'block_semester_sortierung'),
+        get_string('setting:archivedesc', 'block_semester_sortierung', '...'),
+        0,
+        $values
+    );
+    $values[0] = get_string('showall', 'moodle', '');
+    $configs[] = new admin_setting_configselect('autoclose',
+        get_string('setting:autoclose', 'block_semester_sortierung'),
+        get_string('setting:autoclosedesc', 'block_semester_sortierung'),
+        0,
+        $values
+    );
+    $values = array();
+    for ($i = 0; $i <= 48; $i++) {
+        $values[$i] = strval($i);
+    }
+    $values[0] = get_string('showall', 'moodle', '');
+
+    $configs[] = new admin_setting_configselect('skipevents',
+        get_string('setting:skipevents', 'block_semester_sortierung'),
+        get_string('setting:skipeventsdesc', 'block_semester_sortierung'),
+        0,
+        $values
+    );
     foreach ($configs as $config) {
         $config->plugin = 'block_semester_sortierung';
         $settings->add($config);
@@ -69,3 +102,14 @@ if ($ADMIN->fulltree) {
 
 }
 
+if (file_exists($CFG->dirroot . '/blocks/semsort/version.php')) {
+    $ADMIN->add('blocksettingsemester_sortierungfolder', $settings);
+    $ADMIN->add('blocksettingsemester_sortierungfolder',
+        new admin_externalpage(
+            'blocksemester_sortierungmigrate',
+            get_string('migrate_title', 'block_semester_sortierung'),
+            $CFG->wwwroot.'/blocks/semester_sortierung/db/migrate.php'
+        )
+    );
+    $settings = null; // Prevent duplicate settings page!
+}

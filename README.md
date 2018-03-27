@@ -1,11 +1,11 @@
-Semsort Block
+semester_sortierung Block
 =============
 
 This file is part of the block_semester_sortierung plugin for Moodle - <http://moodle.org/>
 
 *Author:*    Simeon Naydenov, Katarzyna Potocka
 
-*Copyright:* 2014 [Academic Moodle Cooperation](http://www.academic-moodle-cooperation.org)
+*Copyright:* 2018 [Academic Moodle Cooperation](http://www.academic-moodle-cooperation.org)
 
 *License:*   [GNU GPL v3 or later](http://www.gnu.org/copyleft/gpl.html)
 
@@ -13,10 +13,10 @@ This file is part of the block_semester_sortierung plugin for Moodle - <http://m
 Description
 -----------
 
-In the Semsort block courses are grouped by their starting dates in a semester view on the MyMoodle
+In the semester_sortierung block courses are grouped by their starting dates in a semester view on the MyMoodle
 page.
 
-The Semsort block also displays all MyMoodle information regarding the course activities of the
+The semester_sortierung block also displays all MyMoodle information regarding the course activities of the
 individual courses.
 
 The module will also feature a "My favourites" area, for which courses from different semesters can
@@ -26,14 +26,14 @@ be selected and they will then be listed at the top of the favourites area.
 Example
 -------
 
-Use the Semsort module to display the winter and summer semesters with all your courses,
+Use the semester_sortierung module to display the winter and summer semesters with all your courses,
 and the favourites area for quick access.
 
 
 Requirements
 ------------
 
-The plugin is available for Moodle 2.5+. This version is for Moodle 3.3.
+The plugin is available for Moodle 2.5+. This version is for Moodle 3.4.
 
 
 Installation
@@ -51,24 +51,40 @@ Admin Settings
 --------------
 
 As an administrator you can set the default values instance-wide on the settings page for
-administrators in the Semsort block:
+administrators in the semester_sortierung block:
 
-* Sort courses by semesters (checkbox)
-* Winter semester months (checkbox)
-* Show favourites (checkbox)
+* Sort courses by semesters (checkbox) - controls whether courses are sorted at all
+* Winter semester months (checkbox) - select which months should apply for the winter semester
+* Show favourites (checkbox) - controls whether favourites on
+* Archive (number) - group semesters that are older than the specified value 
+* Autocollapse courses (number) - always show courses older than the specified number of months as collapse (only if there are performance issues) 
+* Skip older events (number) - don't load events older than the specified number of months (only if there are performance issues)
+
+Migrating settings from old semsort block
+---------------------
+
+Since Moodle 3.4, block_semsort is named block_semester_sortierung (mostly to avoid confusion with the long 
+name). In order to migrate from old to the new block, there is a Migration script as part of the block settings. Using the script, an administrator is able to:
+ * Migrate block instances on all users' Dashboard pages as well as on the Default Dashboard page
+ * Migrate user preferences (personal sorting, favorites) for all users
+ * Migrate block settings 
+
+The script is located in *Site administration > Plugins > Blocks > Semester overview - Migrate settings from deprecated semsort block*
+
+**IMPORTANT!** The script has to be executed before the old block is uninstalled! Otherwise all settings and preferences will be lost.
 
 
 Web Service
 -----------
 
-The Semsort block provides the following web service functions.
+The semester_sortierung block provides the following web service functions.
 
 * Authentication - via token
 
   Token can be obtained in two ways:
   - manually from Moodle at `$CFG->wwwroot/admin/settings.php?section=webservicetokens`
   - by calling `$CFG->wwwroot/login/token.php?username=USERNAME&password=PASSWORD&service=SERVICENAME`
-    (here `SERVICENAME` is Semsort Web service)
+    (here `SERVICENAME` is semester_sortierung Web service)
 
 * Requests
 
@@ -90,6 +106,7 @@ The Semsort block provides the following web service functions.
   - Produces: application/json
   - Image format: base64 png
   - Sample output: `[ {"modname": "MODULE NAME - UNIQUE ID", "title_en": "Module title in English", "title_de": "Module title in German", "image": "base64EncodedImage"} ]`
+
 
 
 Bug Reports / Support

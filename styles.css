@@ -9,14 +9,13 @@
     min-height: 20px;
 }
 
-.block_semester_sortierung .semesteroverviewcontainer > fieldset {
+.block_semester_sortierung .semester_sortierungcontainer > fieldset {
     padding-top: 0px;
 }
 
 .block_semester_sortierung .semester > legend {
     font-weight: bold;
     cursor: pointer;
-  /*  color: #3D4653;*/
     font-size: 16px;
     margin-top: 0;
 }
@@ -25,27 +24,17 @@
     margin-bottom: 5px;
     background: none;
     cursor: pointer;
-    /*word-break: break-all;*/
     white-space: nowrap;
     max-width: 100%;
 }
 
 .block_semester_sortierung .course > legend > a {
     font-weight: bold;
-    /*color: #002C73;*/
     font-size: 15.15px;
     display: inline-block !important;
     white-space: normal;
     word-wrap: break-word;
     max-width: 94%;
-}
-
-.block_semester_sortierung .course > legend > a:hover {
-    /*color: #CC0033;*/
-}
-
-.block_semester_sortierung .course > legend > a.dimmed {
-    /*color: #AAAAAA;*/
 }
 
 .block_semester_sortierung .expandablebox {
@@ -102,11 +91,7 @@
     display: none;
 }
 
-
-
 /* bigger fix here */
-
-
 .block_semester_sortierung .course > legend {
     padding-right: 0px;
 }
@@ -116,7 +101,6 @@
     padding: 0px;
     border: 0px;
 }
-
 
 .block_semester_sortierung fieldset.course {
     min-height: 30px;
@@ -145,8 +129,6 @@
     line-height: 19px;
 }
 
-
-
 /* end of bigger fix */
 
 .block_semester_sortierung .no_javascript .semester .togglefavorites img,
@@ -155,7 +137,6 @@
     height: 16px;
     width: 17px;
     right: 0px;
-    /*margin-top: -12px;*/
     position: absolute;
     display: block !important;
 }
@@ -189,15 +170,9 @@
     opacity: 0.3;
 }
 
-
-.block_semester_sortierung fieldset.dragged {
-    /*display: none !important;*/
-}
-
 .block_semester_sortierung .blockmovetarget.drop-selected {
     background-color: #f00
 }
-
 
 .block_semester_sortierung .blockmovetarget {
     margin-top: 5px;
@@ -214,7 +189,6 @@
 
 }
 
-
 @media (max-width: 991px) {
 
     .block_semester_sortierung .course > legend > a {
@@ -222,17 +196,12 @@
     }
 }
 
-
-
-
 @media (max-width: 767px) {
     .block_semester_sortierung .course > legend > a {
         max-width: 88%;
     }
 
 }
-
-
 
 @media (max-width: 575px) {
 

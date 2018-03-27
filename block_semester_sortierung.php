@@ -36,6 +36,7 @@ class block_semester_sortierung extends block_base {
     public function init() {
         // Set the title of the block.
         $this->title   = get_string('pluginname', 'block_semester_sortierung');
+
     }
 
     /**
@@ -73,7 +74,6 @@ class block_semester_sortierung extends block_base {
 
         $this->config = $config;
 
-
         $this->content = new stdClass();
         $this->content->text = '';
         $this->content->footer = '';
@@ -82,15 +82,7 @@ class block_semester_sortierung extends block_base {
 
         $renderer = $this->page->get_renderer('block_semester_sortierung');
 
-        // More remote courses stuff, directly copied from Course overview block
-        // Output buffering is used here.
-        if (FALSE && empty($courses) && empty($remotecourses)) {
-            $content[] = get_string('nocourses', 'my');
-        } else {
-            //$content[] = $renderer->render_block($context);
-            $content[] = $renderer->semester_sortierung($this);
-            //$content[] = $renderer->semester_sortierung($courses, $remotecourses, $config);
-        }
+        $content[] = $renderer->semester_sortierung($this);
 
         $this->content->text = implode($content); // Compile the text from the array.
 
@@ -100,7 +92,6 @@ class block_semester_sortierung extends block_base {
     public function export_for_template(renderer_base $output) {
 
         $context = new stdClass;
-
 
         // Get the information about the enrolled courses.
         $courses = enrol_get_my_courses('id, fullname, shortname, summary, summaryformat, enddate', 'visible DESC, fullname ASC');
@@ -154,42 +145,64 @@ class block_semester_sortierung extends block_base {
             $coursesexpanded = array();
         }
 
-
-
         if ($favorites = get_user_preferences('semester_sortierung_favorites', '')) {
             $context->favorites = array_flip(explode(',', $favorites));
         } else {
             $context->favorites = array();
         }
 
-
         $context->coursesexpanded = array();
 
+        $count = 0;
+        $autoclose = isset($this->config->autoclose) ? intval($this->config->autoclose) : 0;
         // Create an array with expanded courses to be filled up with info.
         foreach ($context->courses as $semester => $semesterinfo) {
+            if ($autoclose > 0 && $count >= $autoclose) {
+                break; // Don't allow more than three semesters opened (performance reasons);
+            }
             foreach ($semesterinfo['courses'] as $id => $courseinfo) {
                 if (isset($coursesexpanded[strval($courseinfo->id)])) {
                     $context->coursesexpanded[$courseinfo->id] = $courseinfo;
                 }
             }
+            $count++;
         }
 
-
         $context->exportedevents = block_semester_sortierung_get_courses_events($context->coursesexpanded, $output);
-
 
         // Whether the courses should be sorted.
         $context->sorted = (isset($this->config->sortcourses) && $this->config->sortcourses == '1');
 
         $context->showfavorites = (isset($this->config->enablefavorites) && $this->config->enablefavorites == '1');
-        $context->personalsort = (isset($this->config->enablepersonalsort) && $this->config->enablepersonalsort == '1') && $context->sorted;
+        $context->personalsort = (isset($this->config->enablepersonalsort) && $this->config->enablepersonalsort == '1')
+                                 && $context->sorted;
         // Prevent personal sort when not enabled in the setting.
         $context->userediting = $context->personalsort && $this->page->user_is_editing();
 
-
-
         $context->remotecourses = $remotecourses;
         $context->config = $this->config;
+
+        // Archive magic comes here...
+        if ($this->config->archive != 0) {
+            $currentsemester = block_semester_sortierung_get_semester($this->config, time());
+            $currentsemester = $currentsemester->semester_short;
+            $year = intval(substr($currentsemester, 0, 4)); // TODO: improve, this works only for Gregorian!
+            $semester = substr($currentsemester, 4);
+            $archive = intval($this->config->archive);
+
+            $year -= floor($archive / 2);
+            if ($archive % 2 != 0) { // Number is odd, so semester changes from winter to summer or vs..
+                if ($semester == 'S') {
+                    $year--;
+                    $semester = 'W';
+                } else {
+                    $semester = 'S';
+                }
+            }
+            $context->archive = strval($year) . $semester;
+        } else {
+            $context->archive = false;
+        }
         return $context;
     }
 
@@ -247,7 +260,7 @@ class block_semester_sortierung extends block_base {
 
 
     /**
-     * loads the required javascript to run semsort
+     * loads the required javascript to run semester_sortierung
      *
      */
     public function get_required_javascript() {
@@ -255,7 +268,7 @@ class block_semester_sortierung extends block_base {
             'id'             => $this->instance->id
         );
         $this->page->requires->yui_module(array('core_dock', 'moodle-block_semester_sortierung-semester_sortierung'),
-            'M.block_semester_sortierung.init_add_semsort', array($arguments));
+            'M.block_semester_sortierung.init_add_semester_sortierung', array($arguments));
     }
 
 

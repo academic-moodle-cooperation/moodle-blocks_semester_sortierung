@@ -40,3 +40,7 @@ $string['enablefavorites'] = 'Favoriten zeigen';
 $string['enablefavoritesdesc'] = 'Zeige einen separaten Abschitt für Kurse, die als Favoriten markiert wurden';
 $string['semester_sortierung:addinstance'] = 'Neuen Block \'Semesterübersicht\' hinzufügen';
 $string['semester_sortierung:myaddinstance'] = 'Neuen Block \'Semesterübersicht\' für \'Meine Startseite\' hinzufügen';
+
+
+$string['setting:archivedesc'] = 'älter als {$a} Semester';
+$string['setting:archive'] = 'Archiv';
