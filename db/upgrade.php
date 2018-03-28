@@ -13,7 +13,7 @@ function xmldb_block_semester_sortierung_upgrade($oldversion) {
     global $DB;
 
     $dbman = $DB->get_manager();
-    if ($oldversion < 2017111302) {
+    if ($oldversion < 2017111300) {
         require_once(__DIR__ . '/../locallib.php');
 
         // Define table block_semester_sortierung_us to be created.
@@ -69,6 +69,6 @@ function xmldb_block_semester_sortierung_upgrade($oldversion) {
         }
 
         // Semester_sortierung savepoint reached.
-        upgrade_block_savepoint(true, 2017111302, 'semester_sortierung');
+        upgrade_block_savepoint(true, 2017111300, 'semester_sortierung');
     }
 }
