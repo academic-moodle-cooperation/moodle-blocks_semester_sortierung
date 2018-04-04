@@ -60,20 +60,6 @@ administrators in the semester_sortierung block:
 * Autocollapse courses (number) - always show courses older than the specified number of months as collapse (only if there are performance issues) 
 * Skip older events (number) - don't load events older than the specified number of months (only if there are performance issues)
 
-Migrating settings from old semsort block
----------------------
-
-Since Moodle 3.4, block_semsort is named block_semester_sortierung (mostly to avoid confusion with the long 
-name). In order to migrate from old to the new block, there is a Migration script as part of the block settings. Using the script, an administrator is able to:
- * Migrate block instances on all users' Dashboard pages as well as on the Default Dashboard page
- * Migrate user preferences (personal sorting, favorites) for all users
- * Migrate block settings 
-
-The script is located in *Site administration > Plugins > Blocks > Semester overview - Migrate settings from deprecated semsort block*
-
-**IMPORTANT!** The script has to be executed before the old block is uninstalled! Otherwise all settings and preferences will be lost.
-
-
 Web Service
 -----------
 

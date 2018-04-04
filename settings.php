@@ -27,13 +27,11 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$ADMIN->add('blocksettings', new admin_category('blocksettingsemester_sortierungfolder', new lang_string('pluginname', 'block_semester_sortierung')));
-
 if ($ADMIN->fulltree) {
 
     $configs = array();
 
-    $configs[] = new admin_setting_configcheckbox('sortcourses',
+    $configs[] = new admin_setting_configcheckbox('block_semester_sortierung/sortcourses',
         get_string('sortcourse', 'block_semester_sortierung'),
         get_string('sortcoursedesc', 'block_semester_sortierung'), '1');
 
@@ -49,18 +47,18 @@ if ($ADMIN->fulltree) {
         }
     }
 
-    $configs[] = new admin_setting_configmulticheckbox('wintermonths',
+    $configs[] = new admin_setting_configmulticheckbox('block_semester_sortierung/wintermonths',
         get_string('wintermonths', 'block_semester_sortierung'),
         get_string('monthsdesc', 'block_semester_sortierung'),
         $selected,
         $monthsarray);
 
-    $configs[] = new admin_setting_configcheckbox('enablefavorites',
+    $configs[] = new admin_setting_configcheckbox('block_semester_sortierung/enablefavorites',
         get_string('enablefavorites', 'block_semester_sortierung'),
         get_string('enablefavoritesdesc', 'block_semester_sortierung'),
         '1');
 
-    $configs[] = new admin_setting_configcheckbox('enablepersonalsort',
+    $configs[] = new admin_setting_configcheckbox('block_semester_sortierung/enablepersonalsort',
         get_string('enablepersonalsort', 'block_semester_sortierung'),
         get_string('enablepersonalsortdesc', 'block_semester_sortierung'),
         '1');
@@ -70,14 +68,14 @@ if ($ADMIN->fulltree) {
         $values[$i] = strval($i);
     }
     $values[0] = get_string('no');
-    $configs[] = new admin_setting_configselect('archive',
+    $configs[] = new admin_setting_configselect('block_semester_sortierung/archive',
         get_string('setting:archive', 'block_semester_sortierung'),
         get_string('setting:archivedesc', 'block_semester_sortierung', '...'),
         0,
         $values
     );
     $values[0] = get_string('showall', 'moodle', '');
-    $configs[] = new admin_setting_configselect('autoclose',
+    $configs[] = new admin_setting_configselect('block_semester_sortierung/autoclose',
         get_string('setting:autoclose', 'block_semester_sortierung'),
         get_string('setting:autoclosedesc', 'block_semester_sortierung'),
         0,
@@ -89,7 +87,7 @@ if ($ADMIN->fulltree) {
     }
     $values[0] = get_string('showall', 'moodle', '');
 
-    $configs[] = new admin_setting_configselect('skipevents',
+    $configs[] = new admin_setting_configselect('block_semester_sortierung/skipevents',
         get_string('setting:skipevents', 'block_semester_sortierung'),
         get_string('setting:skipeventsdesc', 'block_semester_sortierung'),
         0,
@@ -100,16 +98,4 @@ if ($ADMIN->fulltree) {
         $settings->add($config);
     }
 
-}
-
-if (file_exists($CFG->dirroot . '/blocks/semsort/version.php')) {
-    $ADMIN->add('blocksettingsemester_sortierungfolder', $settings);
-    $ADMIN->add('blocksettingsemester_sortierungfolder',
-        new admin_externalpage(
-            'blocksemester_sortierungmigrate',
-            get_string('migrate_title', 'block_semester_sortierung'),
-            $CFG->wwwroot.'/blocks/semester_sortierung/db/migrate.php'
-        )
-    );
-    $settings = null; // Prevent duplicate settings page!
 }
