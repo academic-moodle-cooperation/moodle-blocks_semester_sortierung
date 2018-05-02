@@ -51,3 +51,14 @@ $string['setting:autoclosedesc'] = 'Automatically collapse expanded courses olde
 
 $string['setting:skipevents'] = 'Skip older events';
 $string['setting:skipeventsdesc'] = 'Skip events that are older than ... months';
+
+
+// Privacy API strings!
+$string['privacy:metadata:usersorting:userid'] = 'The ID of the user for which the course order is stored.';
+$string['privacy:metadata:usersorting:semester'] = 'The semester for which the course order is stored.';
+$string['privacy:metadata:usersorting:courseorder'] = 'The order of the courses as they appear in the block and ordered by the user.';
+$string['privacy:metadata:usersorting:lastmodified'] = 'A timestamp of the last modification date';
+$string['privacy:metadata:usersorting'] = 'Table which stores the personal order of the courses per user per semester.';
+$string['privacy:metadata:preference:semester_sortierung_favorites'] = 'Stores courses marked as favorites';
+$string['privacy:metadata:preference:semester_sortierung_courses'] = 'Stores the state of courses inside the block (opened or closed).';
+$string['privacy:metadata:preference:semester_sortierung_semesters'] = 'Stores the state of semesters inside the block (opened or closed).';
