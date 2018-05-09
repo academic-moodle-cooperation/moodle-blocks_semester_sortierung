@@ -9,6 +9,7 @@
 namespace block_semester_sortierung\privacy;
 
 use core_privacy\local\metadata\collection;
+use core_privacy\local\request\contextlist;
 
 
 class provider implements \core_privacy\local\metadata\provider {
@@ -38,5 +39,34 @@ class provider implements \core_privacy\local\metadata\provider {
             'privacy:metadata:preference:semester_sortierung_semesters');
 
         return $collection;
+    }
+
+    /**
+     * Get the list of contexts that contain user information for the specified user.
+     *
+     * @param   int           $userid       The user to search.
+     * @return  contextlist   $contextlist  The list of contexts used in this plugin.
+     */
+    public static function get_contexts_for_userid(int $userid) : contextlist {
+        $contextlist = new \core_privacy\local\request\contextlist();
+
+        $sql = "SELECT c.id
+                 FROM {context} c
+           INNER JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
+           INNER JOIN {modules} m ON m.id = cm.module AND m.name = :modname
+           INNER JOIN {forum} f ON f.id = cm.instance
+            LEFT JOIN {forum_discussions} d ON d.forum = f.id
+                WHERE (
+                d.userid        = :discussionuserid
+                )
+        ";
+
+        $params = [
+            'modname'           => 'forum',
+            'contextlevel'      => CONTEXT_MODULE,
+            'discussionuserid'  => $userid,
+        ];
+
+        $contextlist->add_from_sql($sql, $params);
     }
 }
