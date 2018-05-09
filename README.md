@@ -33,7 +33,7 @@ and the favourites area for quick access.
 Requirements
 ------------
 
-The plugin is available for Moodle 2.5+. This version is for Moodle 3.4.
+The plugin is available for Moodle 2.5+. This version is for Moodle 3.5.
 
 
 Installation
@@ -59,6 +59,11 @@ administrators in the semester_sortierung block:
 * Archive (number) - group semesters that are older than the specified value 
 * Autocollapse courses (number) - always show courses older than the specified number of months as collapse (only if there are performance issues) 
 * Skip older events (number) - don't load events older than the specified number of months (only if there are performance issues)
+
+Privacy API
+-----------
+
+The semester_sortierung block fully implements the Moodle Privacy API.
 
 Web Service
 -----------

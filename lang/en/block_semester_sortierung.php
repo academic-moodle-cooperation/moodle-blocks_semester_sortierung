@@ -62,3 +62,6 @@ $string['privacy:metadata:usersorting'] = 'Table which stores the personal order
 $string['privacy:metadata:preference:semester_sortierung_favorites'] = 'Stores courses marked as favorites';
 $string['privacy:metadata:preference:semester_sortierung_courses'] = 'Stores the state of courses inside the block (opened or closed).';
 $string['privacy:metadata:preference:semester_sortierung_semesters'] = 'Stores the state of semesters inside the block (opened or closed).';
+$string['privacy:exportdata:preference:semester_sortierung_semesters'] = 'List of comma-separated semesters which remain expanded after the user leaves MOODLE. Semesters are given in format YYYYW, where YYYY stands for the year, and W stands for Winter or Summer semester';
+$string['privacy:exportdata:preference:semester_sortierung_courses'] = 'List of comma-separated courses which remain expanded after the user leaves MOODLE';
+$string['privacy:exportdata:preference:semester_sortierung_favorites'] = 'List of comma-separated course ids marked as favorite';

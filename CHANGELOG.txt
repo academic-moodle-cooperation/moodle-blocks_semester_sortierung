@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+3.5.0 (2018-05-??)
+------------------
+* Moodle 3.5 compatible version
+* Implement Privacy API
+
 3.4.0 (2017-11-13)
 ------------------
 
