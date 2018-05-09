@@ -71,4 +71,5 @@ function xmldb_block_semester_sortierung_upgrade($oldversion) {
         // Semester_sortierung savepoint reached.
         upgrade_block_savepoint(true, 2017111300, 'semester_sortierung');
     }
+    return true;
 }
