@@ -12,8 +12,12 @@ use core_privacy\local\metadata\collection;
 use core_privacy\local\request\contextlist;
 use core_privacy\local\request\approved_contextlist;
 use core_privacy\local\request\writer;
+use core_privacy\local\request\transform;
 
-class provider implements \core_privacy\local\metadata\provider {
+class provider implements
+    \core_privacy\local\metadata\provider,
+    \core_privacy\local\request\user_preference_provider,
+    \core_privacy\local\request\core_user_data_provider {
 
     public static function get_metadata(collection $collection) : collection {
 
@@ -48,10 +52,66 @@ class provider implements \core_privacy\local\metadata\provider {
      * @param   int           $userid       The user to search.
      * @return  contextlist   $contextlist  The list of contexts used in this plugin.
      */
-    //TODO
     public static function get_contexts_for_userid(int $userid) : contextlist {
         $contextlist = new contextlist();
 
+        $sql = '
+SELECT
+  c.id
+FROM
+  {context} c 
+WHERE
+  (c.instanceid = :userid AND
+   c.contextlevel = :contextlevel)';
+        $params = array(
+            'userid' => $userid,
+            'contextlevel' => CONTEXT_USER
+        );
+        $contextlist->add_from_sql($sql, $params);
+
+        $sql = '
+SELECT
+  c.id
+FROM
+  {context} c
+JOIN
+  {block_instances} bi ON c.instanceid = bi.id
+JOIN
+  {context} c2 ON bi.parentcontextid = c2.id
+WHERE
+  (c2.instanceid = :userid AND
+   c2.contextlevel = :contextleveluser AND
+   c.contextlevel = :contextlevelblock AND
+   bi.blockname = :blockname)';
+        $params = array(
+            'userid' => $userid,
+            'contextleveluser' => CONTEXT_USER,
+            'contextlevelblock' => CONTEXT_BLOCK,
+            'blockname' => 'semester_sortierung'
+        );
+        $contextlist->add_from_sql($sql, $params);
+
+        $sql = '
+SELECT
+  c.id
+FROM
+  {context} c
+JOIN
+  {block_instances} bi ON c.instanceid = bi.id
+JOIN 
+  {context} c2 ON bi.parentcontextid = c2.id
+WHERE
+  (c2.contextlevel = :contextlevelsystem AND
+   c.contextlevel = :contextlevelblock AND
+   bi.blockname = :blockname)';
+        $params = array(
+            'contextlevelsystem' => CONTEXT_SYSTEM,
+            'contextlevelblock' => CONTEXT_BLOCK,
+            'blockname' => 'semester_sortierung'
+        );
+        $contextlist->add_from_sql($sql, $params);
+
+            
         return $contextlist;
     }
 
@@ -62,7 +122,39 @@ class provider implements \core_privacy\local\metadata\provider {
      */
     //TODO;
     public static function export_user_data(approved_contextlist $contextlist) {
+        global $DB;
 
+        $parentcontext = null;
+        $subcontext = null;
+        $userid = null;
+        foreach ($contextlist->get_contexts() as $context) {
+            if ($context->contextlevel == CONTEXT_BLOCK) {
+                $parent = $context->get_parent_context();
+
+                if ($parent->contextlevel == CONTEXT_SYSTEM) {
+                    $parentcontext = $parent;
+                    $subcontext = $context;
+                } else if ($parent->contextlevel == CONTEXT_USER) {
+                    if (is_null($parentcontext)) {
+                        $parentcontext = $parent;
+                        $subcontext = $context;
+                    }
+                }
+            } else if ($context->contextlevel == CONTEXT_USER) {
+                $userid = $context->instanceid;
+            }
+        }
+        if (!is_null($parentcontext) && !is_null($userid)) {
+
+            $usersorts = $DB->get_records('block_semester_sortierung_us', array('userid' => $userid));
+            foreach ($usersorts as $us) {
+                unset($us->id);
+                unset($us->userid);
+                $us->lastmodified = transform::datetime($us->lastmodified);
+            }
+            writer::with_context($subcontext)
+                ->export_data([get_string('privacy:exportdata:usersort', 'block_semester_sortierung')], (object) ['usersorts' => $usersorts]);
+        }
     }
 
 
@@ -98,11 +190,11 @@ class provider implements \core_privacy\local\metadata\provider {
         }
         if ($courses !== null) {
             $semestersdescription = get_string('privacy:exportdata:preference:semester_sortierung_courses', 'block_semester_sortierung');
-            writer::export_user_preference('block_semester_sortierung', 'semester_sortierung_courses', $semesters, $semestersdescription);
+            writer::export_user_preference('block_semester_sortierung', 'semester_sortierung_courses', $courses, $semestersdescription);
         }
         if ($favorites !== null) {
             $semestersdescription = get_string('privacy:exportdata:preference:semester_sortierung_favorites', 'block_semester_sortierung');
-            writer::export_user_preference('block_semester_sortierung', 'semester_sortierung_favorites', $semesters, $semestersdescription);
+            writer::export_user_preference('block_semester_sortierung', 'semester_sortierung_favorites', $favorites, $semestersdescription);
         }
     }
 
