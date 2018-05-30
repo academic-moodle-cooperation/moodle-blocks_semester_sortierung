@@ -120,7 +120,6 @@ WHERE
      *
      * @param   approved_contextlist    $contextlist    The approved contexts to export information for.
      */
-    //TODO;
     public static function export_user_data(approved_contextlist $contextlist) {
         global $DB;
 
@@ -158,9 +157,32 @@ WHERE
     }
 
 
-    //TODO;
     public static function delete_data_for_user(approved_contextlist $contextlist) {
         global $DB;
+
+        $parentcontext = null;
+        $subcontext = null;
+        $userid = null;
+        foreach ($contextlist->get_contexts() as $context) {
+            if ($context->contextlevel == CONTEXT_BLOCK) {
+                $parent = $context->get_parent_context();
+
+                if ($parent->contextlevel == CONTEXT_SYSTEM) {
+                    $parentcontext = $parent;
+                    $subcontext = $context;
+                } else if ($parent->contextlevel == CONTEXT_USER) {
+                    if (is_null($parentcontext)) {
+                        $parentcontext = $parent;
+                        $subcontext = $context;
+                    }
+                }
+            } else if ($context->contextlevel == CONTEXT_USER) {
+                $userid = $context->instanceid;
+            }
+        }
+        if (!is_null($parentcontext) && !is_null($userid)) {
+            $DB->delete_records('block_semester_sortierung_us', array('userid' => $userid));
+        }
 
     }
 
@@ -169,10 +191,11 @@ WHERE
      *
      * @param context $context Context to delete data from.
      */
-    //TODO;
     public static function delete_data_for_all_users_in_context(\context $context) {
         global $DB;
-
+        if ($context->contextlevel == CONTEXT_SYSTEM) {
+            $DB->delete_records('block_semester_sortierung_us', array());
+        }
     }
 
     /**
