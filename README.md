@@ -39,7 +39,7 @@ The plugin is available for Moodle 2.5+. This version is for Moodle 3.5.
 Installation
 ------------
 
-* Copy the module code directly to the mod/semester_sortierung directory.
+* Copy the module code directly to the blocks/semester_sortierung directory.
 
 * Log into Moodle as administrator.
 
