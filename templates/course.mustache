@@ -1,6 +1,6 @@
 <fieldset title="{{{course.fullname}}}" class="course {{#expanded}} expanded {{/expanded}} {{#course.visible}} nothidden {{/course.visible}} {{^course.visible}} hidden {{/course.visible}}" data-id="{{{course.id}}}" data-semester="{{{course.semester_short}}}" data-fav="{{{favorite}}}">
     <legend>
-        {{#userediting}}<span class="move-drag-start hidden">{{#pix}} i/dragdrop, moodle,  {{/pix}}</span><a href="{{{staticmoveurl}}}" class="move-static">{{#pix}}t/move, moodle, {{/pix}}</a>{{/userediting}}<span class="imgbox"></span>&nbsp;<a href="{{{courseurl}}}" title="{{{course.fullname}}}" class="courselink {{^course.visible}}dimmed{{/course.visible}}">{{{course.fullname}}}</a>
+        {{#userediting}}<span class="move-drag-start hidden">{{#pix}} i/dragdrop, moodle,  {{/pix}}</span><a href="{{{staticmoveurl}}}" class="move-static">{{#pix}}t/move, moodle, {{/pix}}</a>{{/userediting}}<span class="imgbox"></span><!--<span class="" style="display: inline-block; width: 16px; margin-right: 1px"></span>--><a href="{{{courseurl}}}" title="{{{course.fullname}}}" class="courselink {{^course.visible}}dimmed{{/course.visible}}">{{{course.fullname}}}</a>
     </legend>
     {{#showfavorites}}
         <a href="{{{favoritesremoveurl}}}" class="togglefavorites off {{#favorite}}invisible{{/favorite}}">

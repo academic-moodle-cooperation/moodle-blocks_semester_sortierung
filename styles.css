@@ -34,7 +34,12 @@
     display: inline-block !important;
     white-space: normal;
     word-wrap: break-word;
-    max-width: 94%;
+    max-width: calc(100% - 17px);
+}
+
+
+.block_semester_sortierung .loading > legend > a {
+    max-width: calc(100% - 16px);
 }
 
 .block_semester_sortierung .expandablebox {
@@ -56,6 +61,7 @@
     height: 10px;
     width: 12px;
     zoom: 1;  *display: inline; *height: 15px; /* IE7 Hack */
+    margin-right: 5px;
 }
 
 .block_semester_sortierung .expanded  > legend > .imgbox {
@@ -69,7 +75,7 @@
     background-size: 14px 14px;
     height: 14px;
     width: 14px;
-    margin: 0 -2px -2px 2px;
+    margin: 0 0 -2px 2px;
     zoom: 1;  *display: inline; *height: 15px; /* IE7 Hack */
 }
 
