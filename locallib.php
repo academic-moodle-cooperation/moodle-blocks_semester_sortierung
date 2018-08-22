@@ -322,12 +322,11 @@ function block_semester_sortierung_get_courses_events($courses, $output) {
     require_once($CFG->dirroot . '/calendar/lib.php');
     require_once($CFG->dirroot . '/calendar/externallib.php');
 
-
-
-
-    /*$allevents1 = \core_calendar\local\api::get_action_events_by_courses(
-        $courses
-    );*/
+    // We don't need to fetch anything if there are no courses in the first place!
+    // This is mainly due to performance issue when fetching events!
+    if (count($courses) == 0) {
+        return array();
+    }
 
     $skipevents = intval(get_config('block_semester_sortierung', 'skipevents'));
 
@@ -338,7 +337,6 @@ function block_semester_sortierung_get_courses_events($courses, $output) {
 
     $vault = \core_calendar\local\event\container::get_event_vault();
 
-
     $courseids = array_keys($courses);
     $alleventsall = array(
         block_semester_sortierung_get_events($vault, $courseids, $timefrom, null),
@@ -347,7 +345,6 @@ function block_semester_sortierung_get_courses_events($courses, $output) {
 
     $allevents = array();
     $foundevents = array();
-
 
     foreach ($alleventsall as $allevents2) {
         foreach ($allevents2 as $event) {
@@ -360,21 +357,7 @@ function block_semester_sortierung_get_courses_events($courses, $output) {
             $foundevents[$event->get_id()] = 1;
         }
     }
-/*
-echo '<pre>';
 
-    ksort($allevents);
-
-    foreach ($allevents as $courseid => $events) {
-        //echo 'COURSE: ' . $courseid . PHP_EOL;
-
-        echo 'COURSE: ' . $courseid .  '   -   ' . count($events) . PHP_EOL;
-        foreach ($events as $event) {
-            echo "\t\t" . $event->get_id() . '  -  '. $event->get_times()->get_sort_time()->getTimestamp() . PHP_EOL;
-        }
-    }
-
-    die;*/
     $exportercache = new \core_calendar\external\events_related_objects_cache($allevents, $courses);
     $exporter = new \core_calendar\external\events_grouped_by_course_exporter($allevents, ['cache' => $exportercache]);
 
