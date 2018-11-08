@@ -154,6 +154,13 @@
     margin-top: -12px;
 }
 
+.block_semester_sortierung .unreadforumposts {
+    position: absolute;
+    text-align: right;
+    margin-top: -14px;
+    right: 42px;
+}
+
 /* one line fix :) */
 
 .block_semester_sortierung .content {

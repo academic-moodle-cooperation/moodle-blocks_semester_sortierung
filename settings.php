@@ -93,6 +93,13 @@ if ($ADMIN->fulltree) {
         0,
         $values
     );
+
+
+    $configs[] = new admin_setting_configcheckbox('block_semester_sortierung/showunreadforumposts',
+        get_string('setting:showunreadforumposts', 'block_semester_sortierung'),
+        get_string('setting:showunreadforumpostsdesc', 'block_semester_sortierung'),
+        '1');
+
     foreach ($configs as $config) {
         $config->plugin = 'block_semester_sortierung';
         $settings->add($config);

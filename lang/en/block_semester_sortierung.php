@@ -52,6 +52,9 @@ $string['setting:autoclosedesc'] = 'Automatically collapse expanded courses olde
 $string['setting:skipevents'] = 'Skip older events';
 $string['setting:skipeventsdesc'] = 'Skip events that are older than ... months';
 
+$string['setting:showunreadforumposts'] = 'Show unread forum posts count';
+$string['setting:showunreadforumpostsdesc'] = 'if checked, a balloon icon will appear next to each course that contans the number of unread forum posts.';
+
 
 // Privacy API strings!
 $string['privacy:metadata:usersorting:userid'] = 'The ID of the user for which the course order is stored.';

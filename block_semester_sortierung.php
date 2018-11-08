@@ -90,6 +90,9 @@ class block_semester_sortierung extends block_base {
     }
 
     public function export_for_template(renderer_base $output) {
+        global $USER, $CFG;
+
+        require_once($CFG->dirroot . '/mod/forum/lib.php');
 
         $context = new stdClass;
 
@@ -126,7 +129,21 @@ class block_semester_sortierung extends block_base {
             } else {
                 $courses[$c->id]->lastaccess = 0;
             }
+
+            // Use the loop to load unread forum posts!
+            if ($this->config->showunreadforumposts == 1) {
+                $unreadposts = forum_tp_get_course_unread_posts($USER->id, $c->id);
+                if (!empty($unreadposts)) {
+                    $unreadposts = reset($unreadposts);
+                    if ($unreadposts->unread > 0) {
+                        $courses[$c->id]->unreadforumposts = intval($unreadposts->unread);
+                        $courses[$c->id]->unreadforumpostsurl = new moodle_url('/mod/forum/index.php', array('id' => $c->id));
+                    }
+                }
+            }
         }
+
+
         // Add the semester to each course.
         $courses = block_semester_sortierung_fill_course_semester($courses, $this->config);
         $courses = block_semester_sortierung_sort_user_personal_sort($courses, $this->config);
@@ -155,6 +172,8 @@ class block_semester_sortierung extends block_base {
 
         $count = 0;
         $autoclose = isset($this->config->autoclose) ? intval($this->config->autoclose) : 0;
+
+
         // Create an array with expanded courses to be filled up with info.
         foreach ($context->courses as $semester => $semesterinfo) {
             if ($autoclose > 0 && $count >= $autoclose) {

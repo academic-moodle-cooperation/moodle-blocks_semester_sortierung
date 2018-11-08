@@ -2,6 +2,13 @@
     <legend>
         {{#userediting}}<span class="move-drag-start hidden">{{#pix}} i/dragdrop, moodle,  {{/pix}}</span><a href="{{{staticmoveurl}}}" class="move-static">{{#pix}}t/move, moodle, {{/pix}}</a>{{/userediting}}<span class="imgbox"></span><!--<span class="" style="display: inline-block; width: 16px; margin-right: 1px"></span>--><a href="{{{courseurl}}}" title="{{{course.fullname}}}" class="courselink {{^course.visible}}dimmed{{/course.visible}}">{{{course.fullname}}}</a>
     </legend>
+    {{#course.unreadforumposts}}
+        <a class="unreadforumposts" href="{{course.unreadforumpostsurl}}">
+            {{#pix}}t/message{{/pix}}
+            <div class="count-container">{{.}}</div>
+        </a>
+
+    {{/course.unreadforumposts}}
     {{#showfavorites}}
         <a href="{{{favoritesremoveurl}}}" class="togglefavorites off {{#favorite}}invisible{{/favorite}}">
             {{#pix}}fav_off, block_semester_sortierung, {{#str}}addtofavorites, block_semester_sortierung{{/str}}{{/pix}}
