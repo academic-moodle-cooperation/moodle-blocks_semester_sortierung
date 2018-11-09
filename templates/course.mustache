@@ -3,8 +3,8 @@
         {{#userediting}}<span class="move-drag-start hidden">{{#pix}} i/dragdrop, moodle,  {{/pix}}</span><a href="{{{staticmoveurl}}}" class="move-static">{{#pix}}t/move, moodle, {{/pix}}</a>{{/userediting}}<span class="imgbox"></span><!--<span class="" style="display: inline-block; width: 16px; margin-right: 1px"></span>--><a href="{{{courseurl}}}" title="{{{course.fullname}}}" class="courselink {{^course.visible}}dimmed{{/course.visible}}">{{{course.fullname}}}</a>
     </legend>
     {{#course.unreadforumposts}}
-        <a class="unreadforumposts" href="{{course.unreadforumpostsurl}}">
-            {{#pix}}t/message{{/pix}}
+        <a class="unreadforumposts" href="{{course.unreadforumpostsurl}}" title="{{#str}}unreadpostsnumber,forum,{{{.}}}{{/str}}">
+            {{#pix}}icon,forum{{/pix}}
             <div class="count-container">{{.}}</div>
         </a>
 
