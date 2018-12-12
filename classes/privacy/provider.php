@@ -13,11 +13,14 @@ use core_privacy\local\request\contextlist;
 use core_privacy\local\request\approved_contextlist;
 use core_privacy\local\request\writer;
 use core_privacy\local\request\transform;
+use core_privacy\local\request\userlist;
+use core_privacy\local\request\approved_userlist;
 
 class provider implements
     \core_privacy\local\metadata\provider,
     \core_privacy\local\request\user_preference_provider,
-    \core_privacy\local\request\core_user_data_provider {
+    \core_privacy\local\request\core_user_data_provider,
+    \core_privacy\local\request\core_userlist_provider {
 
     public static function get_metadata(collection $collection) : collection {
 
@@ -219,6 +222,24 @@ WHERE
             $semestersdescription = get_string('privacy:exportdata:preference:semester_sortierung_favorites', 'block_semester_sortierung');
             writer::export_user_preference('block_semester_sortierung', 'semester_sortierung_favorites', $favorites, $semestersdescription);
         }
+    }
+
+
+    /**
+     * Get the list of users who have data within a context.
+     *
+     * @param   userlist    $userlist   The userlist containing the list of users who have data in this context/plugin combination.
+     */
+    public static function get_users_in_context(userlist $userlist) {
+        
+    }
+
+    /**
+     * Delete multiple users within a single context.
+     *
+     * @param   approved_userlist       $userlist The approved context and user information to delete information for.
+     */
+    public static function delete_data_for_users(approved_userlist $userlist) {
     }
 
 }

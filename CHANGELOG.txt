@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+3.6 (2018-12-10)
+------------------
+* Moodle 3.6 compatible version
+
 3.5.0 (2018-05-??)
 ------------------
 * Moodle 3.5 compatible version
