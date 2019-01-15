@@ -202,7 +202,7 @@ class block_semester_sortierung extends block_base {
         $context->config = $this->config;
 
         // Archive magic comes here...
-        if ($this->config->archive != 0) {
+        if (!empty($this->config->archive) &&  $this->config->archive != 0) {
             $currentsemester = block_semester_sortierung_get_semester($this->config, time());
             $currentsemester = $currentsemester->semester_short;
             $year = intval(substr($currentsemester, 0, 4)); // TODO: improve, this works only for Gregorian!

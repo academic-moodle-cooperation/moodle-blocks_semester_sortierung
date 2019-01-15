@@ -231,7 +231,28 @@ WHERE
      * @param   userlist    $userlist   The userlist containing the list of users who have data in this context/plugin combination.
      */
     public static function get_users_in_context(userlist $userlist) {
-        
+
+        $context = $userlist->get_context();
+
+        if ($context instanceof \context_user) {
+            $params = [
+                'contextid'    => $context->id
+            ];
+
+            $sql = 'SELECT c.instanceid AS userid
+              FROM {context} c 
+             WHERE c.id = :contextid';
+            $userlist->add_from_sql('userid', $sql, $params);
+        }
+
+        if ($context instanceof \context_block || $context instanceof \context_system) {
+            $sql = 'SELECT bsmus.userid 
+              FROM {block_semester_sortierung_us}
+              GROUP BY bsmus.userid';
+            $params = [];
+            $userlist->add_from_sql('userid', $sql, $params);
+        }
+
     }
 
     /**
@@ -240,6 +261,17 @@ WHERE
      * @param   approved_userlist       $userlist The approved context and user information to delete information for.
      */
     public static function delete_data_for_users(approved_userlist $userlist) {
+        global $DB;
+
+        list($userinsql, $userinparams) = $DB->get_in_or_equal($userlist->get_userids(), SQL_PARAMS_NAMED);
+        $sql = "userid {$userinsql}";
+
+        if (empty($userinparams)) {
+            return;
+        }
+
+        $DB->delete_records_select('block_semester_sortierung_us', $sql, $userinparams);
+
     }
 
 }
