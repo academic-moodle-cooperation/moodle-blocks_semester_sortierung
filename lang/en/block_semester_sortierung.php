@@ -53,7 +53,7 @@ $string['setting:skipevents'] = 'Skip older events';
 $string['setting:skipeventsdesc'] = 'Skip events that are older than ... months';
 
 $string['setting:showunreadforumposts'] = 'Show unread forum posts count';
-$string['setting:showunreadforumpostsdesc'] = 'if checked, a balloon icon will appear next to each course that contans the number of unread forum posts.';
+$string['setting:showunreadforumpostsdesc'] = 'if checked, a balloon icon will appear next to each course that contains the number of unread forum posts.';
 
 
 // Privacy API strings!
