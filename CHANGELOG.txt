@@ -4,6 +4,9 @@ CHANGELOG
 3.6 (2018-12-10)
 ------------------
 * Moodle 3.6 compatible version
+* [BUG] #5865 (GitHub #8) - fix php Notice on fresh install
+* [FEATURE] #5757 - implement additional Privacy API functions
+* [FEATURE] #3844 - implement unread forum posts count
 
 3.5.0 (2018-05-??)
 ------------------
