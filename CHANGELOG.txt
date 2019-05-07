@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+3.6.1 (2019-05-07)
+------------------
+* [BUG] Fix github #10 - Fix tiny typo in one English language string. PULL request submitted from Germán Valero
+* [BUG] Fix github #9 - Remove unnecessary space before semester title. PULL request submitted from Luca Bösch
+
 3.6 (2018-12-10)
 ------------------
 * Moodle 3.6 compatible version
