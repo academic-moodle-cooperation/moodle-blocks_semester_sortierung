@@ -5,7 +5,7 @@ This file is part of the block_semester_sortierung plugin for Moodle - <http://m
 
 *Author:*    Simeon Naydenov, Katarzyna Potocka
 
-*Copyright:* 2018 [Academic Moodle Cooperation](http://www.academic-moodle-cooperation.org)
+*Copyright:* 2019 [Academic Moodle Cooperation](http://www.academic-moodle-cooperation.org)
 
 *License:*   [GNU GPL v3 or later](http://www.gnu.org/copyleft/gpl.html)
 
