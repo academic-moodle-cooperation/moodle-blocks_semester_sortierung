@@ -33,7 +33,7 @@ and the favourites area for quick access.
 Requirements
 ------------
 
-The plugin is available for Moodle 2.5+. This version is for Moodle 3.6.
+The plugin is available for Moodle 2.5+. This version is for Moodle 3.7.
 
 
 Installation
