@@ -130,6 +130,10 @@ class block_semester_sortierung extends block_base {
                 $courses[$c->id]->lastaccess = 0;
             }
 
+            // Support filter in fullname and summary.
+            $courses[$c->id]->fullname = format_string($courses[$c->id]->fullname);
+            $courses[$c->id]->summary = format_string($courses[$c->id]->summary);
+
             // Use the loop to load unread forum posts!
             if ($this->config->showunreadforumposts == 1) {
                 $unreadposts = forum_tp_get_course_unread_posts($USER->id, $c->id);
@@ -142,7 +146,6 @@ class block_semester_sortierung extends block_base {
                 }
             }
         }
-
 
         // Add the semester to each course.
         $courses = block_semester_sortierung_fill_course_semester($courses, $this->config);
