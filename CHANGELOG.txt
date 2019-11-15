@@ -1,9 +1,13 @@
 CHANGELOG
 =========
 
+3.8.0 (2019-11-15)
+------------------
+* Moodle 3.8 compatible version
+
 3.7.1 (2019-11-15)
 ------------------
-* [FEATURE] - support filter in course fullname and summary
+* [FEATURE] - support filter in course fullname and summary  [github pull @lucaboesch]
 
 3.7.0 (2019-05-20)
 ------------------

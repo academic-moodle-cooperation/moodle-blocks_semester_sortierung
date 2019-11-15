@@ -176,7 +176,6 @@ class block_semester_sortierung extends block_base {
         $count = 0;
         $autoclose = isset($this->config->autoclose) ? intval($this->config->autoclose) : 0;
 
-
         // Create an array with expanded courses to be filled up with info.
         foreach ($context->courses as $semester => $semesterinfo) {
             if ($autoclose > 0 && $count >= $autoclose) {
