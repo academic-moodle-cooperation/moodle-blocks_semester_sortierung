@@ -2,9 +2,9 @@
 
 /**
  *
- * @package       moodle34
+ * @package       moodle39
  * @author        Simeon Naydenov (moniNaydenov@gmail.com)
- * @copyright     2018
+ * @copyright     2020
  * @license       http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

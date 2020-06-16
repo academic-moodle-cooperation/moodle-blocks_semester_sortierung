@@ -5,7 +5,7 @@ This file is part of the block_semester_sortierung plugin for Moodle - <http://m
 
 *Author:*    Simeon Naydenov, Katarzyna Potocka
 
-*Copyright:* 2019 [Academic Moodle Cooperation](http://www.academic-moodle-cooperation.org)
+*Copyright:* 2020 [Academic Moodle Cooperation](http://www.academic-moodle-cooperation.org)
 
 *License:*   [GNU GPL v3 or later](http://www.gnu.org/copyleft/gpl.html)
 
@@ -33,7 +33,7 @@ and the favourites area for quick access.
 Requirements
 ------------
 
-The plugin is available for Moodle 2.5+. This version is for Moodle 3.8.
+The plugin is available for Moodle 2.5+. This version is for Moodle 3.9.
 
 
 Installation

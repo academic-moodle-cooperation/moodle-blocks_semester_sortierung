@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: moni
- * Date: 02.05.18
- * Time: 12:16
- */
 
 namespace block_semester_sortierung\privacy;
 
