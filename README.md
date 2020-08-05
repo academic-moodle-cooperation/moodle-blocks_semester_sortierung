@@ -22,6 +22,12 @@ individual courses.
 The module will also feature a "My favourites" area, for which courses from different semesters can
 be selected and they will then be listed at the top of the favourites area.
 
+**WARNING: This plugin is deprecated.** The last maintained version of the Plugin will be for Moodle 3.9. After 3.9 we won’t maintain the plugin any further. 
+The reason behind that is that now you can achieve similar functionality using the core Course Overview Block and its new filtering capabilities.  
+
+For further information on how to use moodle core features check the course overview functionality and the filter options. 
+
+
 
 Example
 -------

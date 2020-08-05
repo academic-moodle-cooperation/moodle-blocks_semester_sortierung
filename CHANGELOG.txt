@@ -3,6 +3,7 @@ CHANGELOG
 
 3.9.0 (2020-06-16)
 ------------------
+* version 3.9 is the last supported version of this plugin. Use the moodle core block  “course overview” and the filter options, in order to provide your users with a similar experience.
 * Moodle 3.9 compatible version
 
 
